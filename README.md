@@ -48,7 +48,7 @@ hdel
 
 ## LICENSE - "MIT License"
 
-Copyright (c) 2010 Matthew Ranney, http://ranney.com/
+Copyright (c) 2012 Kristian Faeldt <faeldt_kristian@cyberagent.co.jp>
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
