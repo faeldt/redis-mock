@@ -1,6 +1,6 @@
 redis-mock
 ============
-The goal of the redis-mock project is to create a feature-complete mock of https://github.com/mranney/node_redis, so that it may be used interchangebly when writing unit tests for code that depends on Redis.
+The goal of the redis-mock project is to create a feature-complete mock of https://github.com/mranney/node_redis, so that it may be used interchangeably when writing unit tests for code that depends on Redis.
 
 All operations are performed in-memory, why no Redis installation is required.
 
