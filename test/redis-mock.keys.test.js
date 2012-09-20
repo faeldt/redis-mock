@@ -174,6 +174,10 @@ describe("expire", function () {
                 result.should.equal(1);
 
                 setTimeout(function () {
+                    console.log("Waiting for expire...");
+                }, 1000);
+
+                setTimeout(function () {
 
                     r.exists("test", function (err, result) {
 
@@ -185,7 +189,7 @@ describe("expire", function () {
 
                     });                    
 
-                }, 1900);                
+                }, 2000);                
 
             });
 
