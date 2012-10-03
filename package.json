@@ -11,5 +11,8 @@
 	"devDependencies": {
 		"should": "*",
 		"mocha": "*"
+	},
+	"scripts": {
+		"test": "make test"
 	}
 }
