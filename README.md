@@ -43,6 +43,10 @@ redis-mock is a WIP, why most commands are not yet available. Currently implemen
 * exists
 * expire
 
+## Strings
+* get
+* set
+
 ## Hashing
 * hset
 * hsetnx
