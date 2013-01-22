@@ -53,6 +53,10 @@ redis-mock is a WIP, why most commands are not yet available. Currently implemen
 * hget
 * hexists
 * hdel
+* hlen
+* hgetall
+* hmset
+* hkeys
 
 ## LICENSE - "MIT License"
 
