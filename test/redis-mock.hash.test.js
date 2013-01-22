@@ -138,6 +138,48 @@ describe("basic hashing function", function () {
 
     });
 
+	it("should return length 0 when key does not exist", function (done) {
+      
+		var r = redismock.createClient("", "", "");
+
+		r.hlen("newHash", function(err, result) {
+
+			result.should.equal(0);
+
+			r.end();
+
+ 			done();
+
+		});
+	});
+
+	it("should return length when key exists", function (done) {
+    
+		var r = redismock.createClient("", "", "");
+
+		r.hset("newHash", testKey, testValue, function (err, result) {
+
+    		r.hlen("newHash", function(err, result) {
+				
+				result.should.equal(1);
+
+				r.hset("newHash", testKey + "2", testValue, function (err, result) {
+					
+					r.hlen("newHash", function(err, result) {
+					
+						result.should.equal(2);
+
+						r.end();
+
+						done();
+
+					});
+
+				});
+			});    
+
+		});
+	});
 });
 
 describe("hsetnx", function () {
@@ -186,5 +228,93 @@ describe("hsetnx", function () {
         });
 
     });
+
+});
+
+describe("multiple get/set", function() {
+
+	var mHash = "mHash";
+	var mKey1 = "mKey1";
+	var mKey2 = "mKey2";
+	var mKey3 = "mKey3";
+	var mKey4 = "mKey4";
+	var mValue1 = "mValue1";
+	var mValue2 = "mValue2";
+	var mValue3 = "mValue3";
+	var mValue4 = "mValue4";
+
+	// HMSET
+	it("should be able to set multiple keys as multiple arguments", function(done) {
+
+		var r = redismock.createClient("", "", "");
+
+		r.hmset(mHash, mKey1, mValue1, mKey2, mValue2, function(err, result) {
+		
+			result.should.equal("OK");
+
+			r.end();
+
+			done();
+
+		});
+	});
+
+	it("should be able to set multiple keys as an object", function(done) {
+	
+
+		var r = redismock.createClient("", "", "");
+
+		r.hmset(mHash, { mKey3: mValue3, mKey4: mValue4}, function(err, result) {
+		
+			result.should.equal("OK");
+
+			r.end();
+
+			done();
+
+		});
+
+	});
+
+	//HKEYS
+	it("should be able to get all keys for hash", function(done) {
+
+		var r = redismock.createClient("", "", "");
+
+		r.hkeys(mHash, function(err, result) {
+
+			result.indexOf(mKey1).should.not.equal(-1);
+			result.indexOf(mKey2).should.not.equal(-1);
+			result.indexOf(mKey3).should.not.equal(-1);
+			result.indexOf(mKey4).should.not.equal(-1);
+
+			r.end();
+
+			done();
+
+		});	
+
+	});
+
+
+	//HGETALL
+	it("should be able to get all values for hash", function(done) {
+
+		var r = redismock.createClient("", "", "");
+
+		r.hgetall(mHash, function(err, result) {
+
+			should.exist(result);
+
+			result.should.have.property(mKey1, mValue1);
+			result.should.have.property(mKey2, mValue2);
+			result.should.have.property(mKey3, mValue3);
+			result.should.have.property(mKey4, mValue4);
+
+			r.end();
+	
+			done();
+		});
+	});
 
 });
