@@ -58,6 +58,10 @@ redis-mock is a WIP, why most commands are not yet available. Currently implemen
 * hmset
 * hkeys
 
+## Server
+* flushdb
+* flushall
+
 ## LICENSE - "MIT License"
 
 Copyright (c) 2012 Kristian Faeldt <faeldt_kristian@cyberagent.co.jp>
