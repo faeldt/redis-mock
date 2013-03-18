@@ -189,7 +189,7 @@ describe("expire", function () {
 
                     });                    
 
-                }, 2000);                
+                }, 2100);
 
             });
 
