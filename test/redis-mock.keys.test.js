@@ -198,3 +198,56 @@ describe("expire", function () {
     });
 
 });
+
+describe("keys", function () {
+
+    var r = redismock.createClient();
+    before(function(done) {
+        r.flushdb(function(){
+            r.set("hello", "test", function() {
+                r.set("hallo", "test", function() {
+                    r.set("hxlo", "test", done);
+                });
+            });
+        });
+
+    });
+
+    it ("should return all existing keys if pattern equal - *", function (done) {
+        r.keys('*', function (err, keys) {
+            keys.should.have.length(3);
+            keys.should.include("hello");
+            keys.should.include("hallo");
+            keys.should.include("hxlo");
+            done();
+        });
+    });
+
+    it ("should correct process pattern with '?'", function (done) {
+        r.keys('h?llo', function (err, keys) {
+            keys.should.have.length(2);
+            keys.should.include("hello");
+            keys.should.include("hallo");
+            done();
+        });
+    });
+
+    it ("should correct process pattern with character sets", function (done) {
+        r.keys('h[ae]llo', function (err, keys) {
+            keys.should.have.length(2);
+            keys.should.include("hello");
+            keys.should.include("hallo");
+            done();
+        });
+    });
+
+    it ("should correct process pattern with all special characters", function (done) {
+        r.keys('?[aex]*o', function (err, keys) {
+            keys.should.have.length(3);
+            keys.should.include("hello");
+            keys.should.include("hallo");
+            keys.should.include("hxlo");
+            done();
+        });
+    });
+});
