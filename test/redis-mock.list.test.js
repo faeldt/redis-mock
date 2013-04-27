@@ -39,7 +39,6 @@ describe("basic pushing/poping list", function() {
     it("should push and pop the same element on the end", function(done) {
 
         var r = redismock.createClient("", "", "");
-
         r.rpush(testKey, testValue, function(err, result) {
 
             result.should.equal(1);
@@ -102,7 +101,7 @@ describe("basic pushing/poping list", function() {
 
         var r = redismock.createClient("", "", "");
 
-        r.lpush(testKey2, testValues, function(err, result) {
+        var cb = function(err, result) {
 
             result.should.equal(testValues.length);
 
@@ -119,7 +118,8 @@ describe("basic pushing/poping list", function() {
                   done();
                 });
             });
-        });
+        };
+        r.lpush.apply(r, [testKey2].concat(testValues, cb));
     });
 });
 
@@ -145,7 +145,7 @@ describe("llen", function() {
 
         var r = redismock.createClient("", "", "");
 
-        r.lpush(testKey, testValues, function(err, res) {
+        var cb = function(err, res) {
 
             r.llen(testKey, function(err, result) {
 
@@ -163,7 +163,8 @@ describe("llen", function() {
                     });
                 });
             });
-        });
+        };
+        r.lpush.apply(r, [testKey].concat(testValues, cb));
     });
 
 });
@@ -197,7 +198,7 @@ describe("lindex", function() {
 
         var r = redismock.createClient("", "", "");
 
-        r.rpush(testKey, testValues, function(err, result) {
+        var cb = function(err, result) {
 
             r.lindex(testKey, testValues.length, function(err, result) {
 
@@ -217,14 +218,15 @@ describe("lindex", function() {
                     });
                 });
             });
-        });
+        };
+        r.rpush.apply(r, [testKey].concat(testValues, cb));
     });
 
     it("getting negative indexes of exisiting list", function(done) {
 
         var r = redismock.createClient("", "", "");
 
-        r.rpush(testKey2, testValues, function(err, result) {
+        var cb = function(err, result) {
 
             r.lindex(testKey2, -(testValues.length + 1), function(err, result) {
 
@@ -244,7 +246,8 @@ describe("lindex", function() {
                     });
                 });
             });
-        });
+        };
+        r.rpush.apply(r, [testKey2].concat(testValues, cb));
     });
 });
 
@@ -276,7 +279,7 @@ describe("lset", function() {
 
         var r = redismock.createClient("", "", "");
 
-        r.rpush(keyUndefined2, testValues, function(err, result) {
+        var cb = function(err, result) {
 
             r.lset(keyUndefined2, testValues.length + 1, 3, function(err, result) {
 
@@ -291,14 +294,15 @@ describe("lset", function() {
                     done();
                 });
             });
-        });
+        };
+        r.rpush.apply(r, [keyUndefined2].concat(testValues, cb));
     });
 
     it("changing value positive indexes from start index 0", function(done) {
 
         var r = redismock.createClient("", "", "");
 
-        r.rpush(testKey, testValues, function(err, result) {
+        var cb = function(err, result) {
 
             r.lset(testKey, 0, 3, function(err, result) {
 
@@ -313,14 +317,15 @@ describe("lset", function() {
                     done();
                 });
             });
-        });
+        };
+        r.rpush.apply(r, [testKey].concat(testValues, cb));
     });
 
     it("changing value positive indexes from start index length-1", function(done) {
 
         var r = redismock.createClient("", "", "");
 
-        r.rpush(testKey2, testValues, function(err, result) {
+        var cb = function(err, result) {
 
             r.lset(testKey2, testValues.length - 1, 3, function(err, result) {
 
@@ -335,14 +340,15 @@ describe("lset", function() {
                     done();
                 });
             });
-        });
+        };
+        r.rpush.apply(r, [testKey2].concat(testValues, cb));
     });
 
     it("changing value negative indexes of exisiting list index -1", function(done) {
 
         var r = redismock.createClient("", "", "");
 
-        r.rpush(testKey3, testValues, function(err, result) {
+        var cb = function(err, result) {
 
             r.lset(testKey3, -1, 42, function(err, result) {
 
@@ -357,14 +363,15 @@ describe("lset", function() {
                     done();
                 });
             });
-        });
+        };
+        r.rpush.apply(r, [testKey3].concat(testValues, cb));
     });
 
     it("changing value negative indexes of exisiting list index -length", function(done) {
 
         var r = redismock.createClient("", "", "");
 
-        r.rpush(testKey4, testValues, function(err, result) {
+        var cb = function(err, result) {
 
             r.lset(testKey4, -testValues.length, 45, function(err, result) {
 
@@ -379,7 +386,8 @@ describe("lset", function() {
                     done();
                 });
             });
-        });
+        };
+        r.rpush.apply(r, [testKey4].concat(testValues, cb));
     });
 });
 
