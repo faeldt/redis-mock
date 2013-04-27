@@ -382,3 +382,94 @@ describe("lset", function() {
         });
     });
 });
+
+
+describe("rpushx", function (argument) {
+    var testKey = "myKey8";
+
+    it("tries to push on empty list", function(done) {
+
+        var r = redismock.createClient("", "", "");
+
+        r.rpushx(testKey, 3, function(err, result) {
+
+            result.should.equal(0);
+
+            r.lindex(testKey, 0, function(err, result) {
+
+                should.not.exist(result);
+
+                r.end();
+
+                done();
+            });
+        });
+    });
+
+    it("tries to push on non empty list", function(done) {
+
+        var r = redismock.createClient("", "", "");
+
+        r.rpush(testKey, 3, function(err, result) {
+
+            r.rpushx(testKey, 5, function(err, result) {
+
+                result.should.equal(2);
+
+                r.lindex(testKey, 1, function(err, result) {
+
+                    result.should.equal(5);
+
+                    r.end();
+
+                    done();
+                });
+            });
+        });
+    });
+});
+
+describe("lpushx", function (argument) {
+    var testKey = "myKey9";
+
+    it("tries to push on empty list", function(done) {
+
+        var r = redismock.createClient("", "", "");
+
+        r.lpushx(testKey, 3, function(err, result) {
+
+            result.should.equal(0);
+
+            r.lindex(testKey, 0, function(err, result) {
+
+                should.not.exist(result);
+
+                r.end();
+
+                done();
+            });
+        });
+    });
+
+    it("tries to push on non empty list", function(done) {
+
+        var r = redismock.createClient("", "", "");
+
+        r.lpush(testKey, 3, function(err, result) {
+
+            r.lpushx(testKey, 5, function(err, result) {
+
+                result.should.equal(2);
+
+                r.lindex(testKey, 0, function(err, result) {
+
+                    result.should.equal(5);
+
+                    r.end();
+
+                    done();
+                });
+            });
+        });
+    });
+});
