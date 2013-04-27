@@ -481,3 +481,271 @@ describe("lpushx", function (argument) {
         });
     });
 });
+
+describe("brpop", function() {
+    it("should block until the end of the timeout", function(done) {
+
+        var r = redismock.createClient("", "", "");
+        var time = false;
+
+        r.brpop("foo", 500, function(err, result) {
+
+            console.log("Waiting for timeout...");
+            should.not.exist(result);
+            time.should.equal(true);
+            done();
+        });
+
+        setTimeout(function() {time = true}, 400);
+    });
+
+    it("should block until the end of the timeout even with multiple lists", function(done) {
+        var r = redismock.createClient("", "", "");
+        var time = false;
+        console.log("Waiting for timeout...");
+
+        r.brpop("foo", "ffo", 500, function(err, result) {
+
+            should.not.exist(result);
+            time.should.equal(true);
+            done();
+        });
+
+        setTimeout(function() {time = true}, 400);
+    });
+
+    it("should block with empty list too", function(done) {
+        var r = redismock.createClient("", "", "");
+        r.rpush("foo2", "bar", function(err, result) {
+
+            r.rpop("foo2", function(err, result) {
+
+              var time = false;
+              console.log("Waiting for timeout...");
+
+              r.brpop("foo2", "ffo2", 500, function(err, result) {
+
+                  should.not.exist(result);
+                  time.should.equal(true);
+                  done();
+              });
+
+              setTimeout(function() {time = true}, 400);
+            });
+        });
+    });
+
+    it("should unblock when an element is added", function(done) {
+        var r = redismock.createClient("", "", "");
+        var time = false;
+        console.log("Waiting for pop...");
+
+        r.brpop("foo3", 500, function(err, result) {
+
+            result[0].should.equal("foo3");
+            result[1].should.equal("bar");
+            time.should.equal(true);
+            done();
+        });
+
+        setTimeout(function() {time = true}, 200);
+
+        setTimeout(function() {
+            r.rpush("foo3", "bar");
+        }, 300);
+    });
+
+    it("should unblock when an element is added to any list", function(done) {
+        var r = redismock.createClient("", "", "");
+        var time = false;
+        console.log("Waiting for pop...");
+
+        r.brpop("foo3", "foo4", 500, function(err, result) {
+
+            result[0].should.equal("foo4");
+            result[1].should.equal("bim");
+            time.should.equal(true);
+            done();
+        });
+
+        setTimeout(function() {time = true}, 200);
+
+        setTimeout(function() {
+            r.rpush("foo4", "bim");
+        }, 300);
+    });
+
+    it("push with multiple elements should be condired as one", function(done) {
+        var r = redismock.createClient("", "", "");
+        var time = false;
+        console.log("Waiting for pop...");
+
+        r.brpop("foo5", 500, function(err, result) {
+
+            result[0].should.equal("foo5");
+            result[1].should.equal("bam");
+            time.should.equal(true);
+            done();
+        });
+
+        setTimeout(function() {time = true}, 200);
+
+        setTimeout(function() {
+            r.rpush("foo5", "bim", "bam");
+        }, 300);
+    });
+
+    it("should once it's unblocked it shouldn't be called again", function(done) {
+        var r = redismock.createClient("", "", "");
+        var called = 0;
+        console.log("Waiting for pop...");
+        r.brpop("foo6", "foo7", 500, function(err, result) {
+
+            called += 1;
+        });
+
+        setTimeout(function() {
+            r.rpush("foo6", "bim");
+            r.rpush("foo7", "bam");
+        }, 300);
+
+        setTimeout(function() {
+            called.should.equal(1);
+            done();
+        }, 500);
+    });
+});
+
+describe("blpop", function() {
+    it("should block until the end of the timeout", function(done) {
+
+        var r = redismock.createClient("", "", "");
+        var time = false;
+
+        r.blpop("foo8", 500, function(err, result) {
+
+            console.log("Waiting for timeout...");
+            should.not.exist(result);
+            time.should.equal(true);
+            done();
+        });
+
+        setTimeout(function() {time = true}, 400);
+    });
+
+    it("should block until the end of the timeout even with multiple lists", function(done) {
+        var r = redismock.createClient("", "", "");
+        var time = false;
+        console.log("Waiting for timeout...");
+
+        r.blpop("foo9", "ffo9", 500, function(err, result) {
+
+            should.not.exist(result);
+            time.should.equal(true);
+            done();
+        });
+
+        setTimeout(function() {time = true}, 400);
+    });
+
+    it("should block with empty list too", function(done) {
+        var r = redismock.createClient("", "", "");
+        r.rpush("foo10", "bar", function(err, result) {
+
+            r.rpop("foo10", function(err, result) {
+
+              var time = false;
+              console.log("Waiting for timeout...");
+
+              r.blpop("foo10", "ffo10", 500, function(err, result) {
+
+                  should.not.exist(result);
+                  time.should.equal(true);
+                  done();
+              });
+
+              setTimeout(function() {time = true}, 400);
+            });
+        });
+    });
+
+    it("should unblock when an element is added", function(done) {
+        var r = redismock.createClient("", "", "");
+        var time = false;
+        console.log("Waiting for pop...");
+
+        r.blpop("foo11", 500, function(err, result) {
+
+            result[0].should.equal("foo11");
+            result[1].should.equal("bar");
+            time.should.equal(true);
+            done();
+        });
+
+        setTimeout(function() {time = true}, 200);
+
+        setTimeout(function() {
+            r.rpush("foo11", "bar");
+        }, 300);
+    });
+
+    it("should unblock when an element is added to any list", function(done) {
+        var r = redismock.createClient("", "", "");
+        var time = false;
+        console.log("Waiting for pop...");
+
+        r.blpop("foo12", "foo13", 500, function(err, result) {
+
+            result[0].should.equal("foo12");
+            result[1].should.equal("bim");
+            time.should.equal(true);
+            done();
+        });
+
+        setTimeout(function() {time = true}, 200);
+
+        setTimeout(function() {
+            r.rpush("foo12", "bim");
+        }, 300);
+    });
+
+    it("push with multiple elements should be condired as one", function(done) {
+        var r = redismock.createClient("", "", "");
+        var time = false;
+        console.log("Waiting for pop...");
+
+        r.blpop("foo14", 500, function(err, result) {
+
+            result[0].should.equal("foo14");
+            result[1].should.equal("bam");
+            time.should.equal(true);
+            done();
+        });
+
+        setTimeout(function() {time = true}, 200);
+
+        setTimeout(function() {
+            r.lpush("foo14", "bim", "bam");
+        }, 300);
+    });
+
+    it("should once it's unblocked it shouldn't be called again", function(done) {
+        var r = redismock.createClient("", "", "");
+        var called = 0;
+        console.log("Waiting for pop...");
+        r.blpop("foo15", "foo16", 500, function(err, result) {
+
+            called += 1;
+        });
+
+        setTimeout(function() {
+            r.rpush("foo15", "bim");
+            r.rpush("foo16", "bam");
+        }, 300);
+
+        setTimeout(function() {
+            called.should.equal(1);
+            done();
+        }, 500);
+    });
+});
