@@ -108,11 +108,11 @@ describe("basic pushing/poping list", function() {
 
             r.lpop(testKey2, function(err, result) {
 
-                result.should.equal(testValues[0]);
+                result.should.equal(testValues[testValues.length - 1]);
 
                 r.rpop(testKey2, function(err, result) {
 
-                  result.should.equal(testValues[testValues.length - 1]);
+                  result.should.equal(testValues[0]);
 
                   r.end();
 
@@ -197,7 +197,7 @@ describe("lindex", function() {
 
         var r = redismock.createClient("", "", "");
 
-        r.lpush(testKey, testValues, function(err, result) {
+        r.rpush(testKey, testValues, function(err, result) {
 
             r.lindex(testKey, testValues.length, function(err, result) {
 
@@ -224,7 +224,7 @@ describe("lindex", function() {
 
         var r = redismock.createClient("", "", "");
 
-        r.lpush(testKey2, testValues, function(err, result) {
+        r.rpush(testKey2, testValues, function(err, result) {
 
             r.lindex(testKey2, -(testValues.length + 1), function(err, result) {
 
@@ -276,7 +276,7 @@ describe("lset", function() {
 
         var r = redismock.createClient("", "", "");
 
-        r.lpush(keyUndefined2, testValues, function(err, result) {
+        r.rpush(keyUndefined2, testValues, function(err, result) {
 
             r.lset(keyUndefined2, testValues.length + 1, 3, function(err, result) {
 
@@ -298,7 +298,7 @@ describe("lset", function() {
 
         var r = redismock.createClient("", "", "");
 
-        r.lpush(testKey, testValues, function(err, result) {
+        r.rpush(testKey, testValues, function(err, result) {
 
             r.lset(testKey, 0, 3, function(err, result) {
 
@@ -320,7 +320,7 @@ describe("lset", function() {
 
         var r = redismock.createClient("", "", "");
 
-        r.lpush(testKey2, testValues, function(err, result) {
+        r.rpush(testKey2, testValues, function(err, result) {
 
             r.lset(testKey2, testValues.length - 1, 3, function(err, result) {
 
@@ -342,7 +342,7 @@ describe("lset", function() {
 
         var r = redismock.createClient("", "", "");
 
-        r.lpush(testKey3, testValues, function(err, result) {
+        r.rpush(testKey3, testValues, function(err, result) {
 
             r.lset(testKey3, -1, 42, function(err, result) {
 
@@ -364,7 +364,7 @@ describe("lset", function() {
 
         var r = redismock.createClient("", "", "");
 
-        r.lpush(testKey4, testValues, function(err, result) {
+        r.rpush(testKey4, testValues, function(err, result) {
 
             r.lset(testKey4, -testValues.length, 45, function(err, result) {
 
@@ -455,7 +455,7 @@ describe("lpushx", function (argument) {
 
         var r = redismock.createClient("", "", "");
 
-        r.lpush(testKey, 3, function(err, result) {
+        r.rpush(testKey, 3, function(err, result) {
 
             r.lpushx(testKey, 5, function(err, result) {
 
