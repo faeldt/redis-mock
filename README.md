@@ -12,7 +12,7 @@ Install with:
 
 ```js
 var redis = require("redis-mock"),
-    client = redis.createClient(); 
+    client = redis.createClient();
 ```
 
 # API
@@ -58,6 +58,13 @@ redis-mock is a WIP, why most commands are not yet available. Currently implemen
 * hgetall
 * hmset
 * hkeys
+
+## Lists
+* llen
+* lpush
+* lpop
+* rpop
+* rpush
 
 ## Server
 * flushdb
