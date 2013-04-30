@@ -14,5 +14,8 @@
 	},
 	"scripts": {
 		"test": "make test"
-	}
+	},
+	"contributors": [
+		"lahabana (Charly Molter) <charly.molter@gmail.com>"
+	]
 }
