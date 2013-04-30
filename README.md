@@ -78,7 +78,7 @@ redis-mock is a WIP, why most commands are not yet available. Currently implemen
 
 ## LICENSE - "MIT License"
 
-Copyright (c) 2012 Kristian Faeldt <faeldt_kristian@cyberagent.co.jp>
+Copyright (c) 2012 Kristian Faeldt <kristian.faeldt@gmail.com>
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
