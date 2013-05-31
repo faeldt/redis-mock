@@ -1,4 +1,4 @@
-﻿var redismock = require("../"),
+var redismock = require("../"),
 	should = require("should"),
 	events = require("events");
 
@@ -139,7 +139,7 @@ describe("basic hashing function", function () {
     });
 
 	it("should return length 0 when key does not exist", function (done) {
-      
+
 		var r = redismock.createClient("", "", "");
 
 		r.hlen("newHash", function(err, result) {
@@ -154,19 +154,19 @@ describe("basic hashing function", function () {
 	});
 
 	it("should return length when key exists", function (done) {
-    
+
 		var r = redismock.createClient("", "", "");
 
 		r.hset("newHash", testKey, testValue, function (err, result) {
 
     		r.hlen("newHash", function(err, result) {
-				
+
 				result.should.equal(1);
 
 				r.hset("newHash", testKey + "2", testValue, function (err, result) {
-					
+
 					r.hlen("newHash", function(err, result) {
-					
+
 						result.should.equal(2);
 
 						r.end();
@@ -176,7 +176,7 @@ describe("basic hashing function", function () {
 					});
 
 				});
-			});    
+			});
 
 		});
 	});
@@ -211,7 +211,7 @@ describe("hsetnx", function () {
 
         r.hsetnx(testHash, testKey, testValue2, function (err, result) {
 
-            result.should.equal(0);            
+            result.should.equal(0);
 
             r.hget(testHash, testKey, function (err, result) {
 
@@ -223,7 +223,7 @@ describe("hsetnx", function () {
 
                 done();
 
-            });            
+            });
 
         });
 
@@ -234,6 +234,7 @@ describe("hsetnx", function () {
 describe("multiple get/set", function() {
 
 	var mHash = "mHash";
+  var mHashEmpty = "mHashEmpty";
 	var mKey1 = "mKey1";
 	var mKey2 = "mKey2";
 	var mKey3 = "mKey3";
@@ -249,7 +250,7 @@ describe("multiple get/set", function() {
 		var r = redismock.createClient("", "", "");
 
 		r.hmset(mHash, mKey1, mValue1, mKey2, mValue2, function(err, result) {
-		
+
 			result.should.equal("OK");
 
 			r.end();
@@ -260,12 +261,12 @@ describe("multiple get/set", function() {
 	});
 
 	it("should be able to set multiple keys as an object", function(done) {
-	
+
 
 		var r = redismock.createClient("", "", "");
 
 		r.hmset(mHash, { mKey3: mValue3, mKey4: mValue4}, function(err, result) {
-		
+
 			result.should.equal("OK");
 
 			r.end();
@@ -292,7 +293,7 @@ describe("multiple get/set", function() {
 
 			done();
 
-		});	
+		});
 
 	});
 
@@ -312,9 +313,22 @@ describe("multiple get/set", function() {
 			result.should.have.property(mKey4, mValue4);
 
 			r.end();
-	
+
 			done();
 		});
 	});
+
+  it("should return null on a non existing hash", function(done) {
+    var r = redismock.createClient("","","");
+
+    r.hgetall(mHashEmpty, function(err, result) {
+
+      should.not.exist(result);
+
+      r.end();
+
+      done();
+    });
+  });
 
 });
