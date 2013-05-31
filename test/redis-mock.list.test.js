@@ -5,7 +5,7 @@ var redismock = require("../"),
 describe("basic pushing/poping list", function() {
     var testKey = "myKey";
     var testKey2 = "myKey2";
-    var testValues = [1, 2, 3, 4, 5];
+    var testValues = [1, {foo: "bar"}, 3, 4, 5];
     var testValue = 10;
 
     it("should not get any value from the end", function(done) {
@@ -45,7 +45,7 @@ describe("basic pushing/poping list", function() {
 
             r.rpop(testKey, function(err, result) {
 
-                result.should.equal(testValue);
+                result.should.equal(testValue + "");
 
                 r.end();
 
@@ -64,7 +64,7 @@ describe("basic pushing/poping list", function() {
 
             r.lpop(testKey, function(err, result) {
 
-                result.should.equal(testValue);
+                result.should.equal(testValue + "");
 
                 r.end();
 
@@ -87,7 +87,7 @@ describe("basic pushing/poping list", function() {
 
                 r.rpop(testKey, function(err, result) {
 
-                  result.should.equal(testValue);
+                  result.should.equal(testValue + "");
 
                   r.end();
 
@@ -107,11 +107,11 @@ describe("basic pushing/poping list", function() {
 
             r.lpop(testKey2, function(err, result) {
 
-                result.should.equal(testValues[testValues.length - 1]);
+                result.should.equal(testValues[testValues.length - 1] + "");
 
                 r.rpop(testKey2, function(err, result) {
 
-                  result.should.equal(testValues[0]);
+                  result.should.equal(testValues[0] + "");
 
                   r.end();
 
@@ -206,11 +206,11 @@ describe("lindex", function() {
 
                 r.lindex(testKey, 0, function(err, result) {
 
-                    result.should.equal(testValues[0]);
+                    result.should.equal(testValues[0] + "");
 
                     r.lindex(testKey, testValues.length - 1, function(err, result) {
 
-                        result.should.equal(testValues[testValues.length - 1]);
+                        result.should.equal(testValues[testValues.length - 1] + '');
 
                         r.end();
 
@@ -234,11 +234,11 @@ describe("lindex", function() {
 
                 r.lindex(testKey2, -1, function(err, result) {
 
-                    result.should.equal(testValues[testValues.length - 1]);
+                    result.should.equal(testValues[testValues.length - 1] + "");
 
                     r.lindex(testKey2, -testValues.length, function(err, result) {
 
-                        result.should.equal(testValues[0]);
+                        result.should.equal(testValues[0] + '');
 
                         r.end();
 
@@ -426,7 +426,7 @@ describe("rpushx", function (argument) {
 
                 r.lindex(testKey, 1, function(err, result) {
 
-                    result.should.equal(5);
+                    result.should.equal('5');
 
                     r.end();
 
@@ -471,7 +471,7 @@ describe("lpushx", function (argument) {
 
                 r.lindex(testKey, 0, function(err, result) {
 
-                    result.should.equal(5);
+                    result.should.equal('5');
 
                     r.end();
 
