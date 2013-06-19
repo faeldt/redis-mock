@@ -182,6 +182,32 @@ describe("basic hashing function", function () {
 	});
 });
 
+describe("hincrby", function () {
+
+    var testHash = "myHashToIncr";
+    var testKey = "myKeyToIncr";
+
+
+    it("should increment an attribute of the hash", function (done) {
+
+        var r = redismock.createClient("", "", "");
+
+        r.hincrby(testHash, testKey, 2, function (err, result) {
+            result.should.equal(2);
+
+            r.hget(testHash, testKey, function (err, result) {
+                result.should.equal(2);
+            });
+
+            r.end();
+
+            done();
+        });
+
+    });
+
+});
+
 describe("hsetnx", function () {
 
     var testHash = "myHash";
