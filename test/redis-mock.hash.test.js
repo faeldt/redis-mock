@@ -57,6 +57,38 @@ describe("basic hashing usage", function () {
             });
         });
 
+        it("should refuse to get a string from an hash", function(done) {
+
+            var r = redismock.createClient("", "", "");
+
+            r.get(testHash, function (err, result) {
+
+                should.not.exist(result);
+
+                err.message.should.equal("ERR Operation against a key holding the wrong kind of value");
+
+                r.end();
+
+                done();
+            });
+        });
+
+        it("should set a value in an existing hash and say it already existed", function (done) {
+
+            var r = redismock.createClient("", "", "");
+
+            r.hset(testHash, testKey, testValue, function (err, result) {
+
+                result.should.equal(0);
+
+                r.end();
+
+                done();
+
+            });
+
+        });
+
         it("should get a value that has been set", function (done) {
 
             var r = redismock.createClient("", "", "");
@@ -172,27 +204,23 @@ describe("basic hashing usage", function () {
 
             var r = redismock.createClient("", "", "");
 
-            r.hset("newHash", testKey, testValue, function (err, result) {
+            r.hlen(testHash, function(err, result) {
 
-                r.hlen("newHash", function(err, result) {
+                result.should.equal(1);
 
-                    result.should.equal(1);
+                r.hset(testHash, testKey + "2", testValue, function (err, result) {
 
-                    r.hset("newHash", testKey + "2", testValue, function (err, result) {
+                    r.hlen(testHash, function(err, result) {
 
-                        r.hlen("newHash", function(err, result) {
+                        result.should.equal(2);
 
-                            result.should.equal(2);
+                        r.end();
 
-                            r.end();
-
-                            done();
-
-                        });
+                        done();
 
                     });
-                });
 
+                });
             });
         });
     });

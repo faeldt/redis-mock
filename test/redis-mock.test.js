@@ -36,10 +36,13 @@ describe("redis-mock", function () {
         var r = redismock.createClient("", "", "");
 
         var didEmitOther = true;
+        var didOtherPassed = false
 
         r.on("ready", function () {
 
-            if (didEmitOther) {
+            if (didEmitOther && !didOtherPassed) {
+
+                didOtherPassed = true;
 
                 r.end();
 
@@ -50,7 +53,9 @@ describe("redis-mock", function () {
 
         r.on("connect", function () {
 
-            if (didEmitOther) {
+            if (didEmitOther && !didOtherPassed) {
+
+                didOtherPassed = true;
 
                 r.end();
                 
