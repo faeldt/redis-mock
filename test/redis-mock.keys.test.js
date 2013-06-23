@@ -2,6 +2,10 @@
 	should = require("should"),
 	events = require("events");
 
+if (process.env['VALID_TESTS']) {
+    redismock = require('redis'); 
+}
+
 describe("del", function () {
 
     it("should do nothing with non-existant keys", function (done) {
@@ -202,7 +206,7 @@ describe("expire", function () {
 describe("keys", function () {
 
     var r = redismock.createClient();
-    before(function(done) {
+    beforeEach(function(done) {
         r.flushdb(function(){
             r.set("hello", "test", function() {
                 r.set("hallo", "test", function() {

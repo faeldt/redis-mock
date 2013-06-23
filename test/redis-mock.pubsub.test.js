@@ -2,6 +2,9 @@
 	should = require("should"),
 	events = require("events");
 
+if (process.env['VALID_TESTS']) {
+    redismock = require('redis'); 
+}
 
 describe("publish and subscribe", function () {
 
@@ -32,36 +35,33 @@ describe("publish and subscribe", function () {
         r.subscribe(channelName);
     });
 
-    it("should publish to a channel and recieve when subscribing to that channel", function (done) {
-
-        var channelName = "testchannel";
-
-        var r = redismock.createClient("", "", "");
-
-        r.subscribe(channelName);
-
-        r.on('message', function (ch, msg) {
-
-            ch.should.equal(channelName);
-            r.unsubscribe(channelName);
-
-            r.end();
-
-            done();
-        });
-
-        r.publish(channelName, "");
-
-    });
-
-    it("should only recieve message on channels subscribed to", function (done) {
-
+    it("suscribing and publishing with the same connection should make an error", function(done) {
         var channelName = "testchannel";
         var otherChannel = "otherchannel";
 
         var r = redismock.createClient("", "", "");
         r.subscribe(channelName);
 
+        try {
+            (function(){
+                r.publish(otherChannel, "");
+            }).should.throwError();
+        } catch(e) {
+            r.end();
+
+            done();
+        }
+    });
+
+    it("should only receive message on channels subscribed to", function (done) {
+
+        var channelName = "testchannel";
+        var otherChannel = "otherchannel";
+
+        var r = redismock.createClient("", "", "");
+        var r2 = redismock.createClient("", "", "");
+        r.subscribe(channelName);
+
         r.on('message', function (ch, msg) {
             ch.should.equal(channelName);
 
@@ -72,9 +72,9 @@ describe("publish and subscribe", function () {
             done();
         });
 
-        r.publish(otherChannel, "");
+        r2.publish(otherChannel, "");
         process.nextTick(function () {
-            r.publish(channelName, "");
+            r2.publish(channelName, "");
         });
     });
 
@@ -85,6 +85,7 @@ describe("publish and subscribe", function () {
 
         var r = redismock.createClient("", "", "");
         var r2 = redismock.createClient("", "", "");
+        var r3 = redismock.createClient("", "", "");
 
         r.subscribe(channelName);
         r2.subscribe(channelName);
@@ -111,14 +112,17 @@ describe("publish and subscribe", function () {
                 r2.unsubscribe(doneChannel);
 
                 r.end();
+                r2.end();
 
                 done();
             }
         });
 
-        r.publish(channelName, "");
-        r.publish(channelName, "");
-        r.publish(doneChannel, "");
+        r3.publish(channelName, "");
+        r3.publish(channelName, "");
+        setTimeout(function() {
+            r3.publish(doneChannel, "");
+        }, 500);
 
     });
 

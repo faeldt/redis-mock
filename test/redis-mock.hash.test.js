@@ -2,7 +2,11 @@ var redismock = require("../"),
 	should = require("should"),
 	events = require("events");
 
-describe("basic hashing function", function () {
+if (process.env['VALID_TESTS']) {
+    redismock = require('redis');
+}
+
+describe("basic hashing usage", function () {
 
     var testHash = "myHash";
     var testKey = "myKey";
@@ -42,144 +46,157 @@ describe("basic hashing function", function () {
 
     });
 
-    it("should get a value that has been set", function (done) {
+    describe("more complex set/get/exist...", function() {
 
-        var r = redismock.createClient("", "", "");
+        beforeEach(function(done) {
+            var r = redismock.createClient("", "", "");
+            r.hset(testHash, testKey, testValue, function (err, result) {
 
-        r.hget(testHash, testKey, function (err, result) {
+                done();
 
-            result.should.equal(testValue);
+            });
+        });
 
-            r.end();
+        it("should get a value that has been set", function (done) {
 
-            done();
+            var r = redismock.createClient("", "", "");
+            
+            r.hget(testHash, testKey, function (err, result) {
+
+                result.should.equal(testValue);
+
+                r.end();
+
+                done();
+
+            });
 
         });
 
-    });
+        it("should not get a value that has not been set", function (done) {
 
-    it("should not get a value that has not been set", function (done) {
+            var r = redismock.createClient("", "", "");
+            r.hget(testHash, testKeyNotExist, function (err, result) {
 
-        var r = redismock.createClient("", "", "");
+                should.not.exist(result);
 
-        r.hget(testHash, testKeyNotExist, function (err, result) {
+                r.end();
 
-            should.not.exist(result);
+                done();
 
-            r.end();
-
-            done();
-
-        });
-
-    });
-
-    it("should say that set value exists", function (done) {
-
-        var r = redismock.createClient("", "", "");
-
-        r.hexists(testHash, testKey, function (err, result) {
-
-            result.should.equal(1);
-
-            r.end();
-
-            done();
+            });
 
         });
 
-    });
+        it("should say that set value exists", function (done) {
 
-    it("should delete a value", function (done) {
+            var r = redismock.createClient("", "", "");
 
-        var r = redismock.createClient("", "", "");
+            r.hexists(testHash, testKey, function (err, result) {
 
-        r.hdel(testHash, testKey, function (err, result) {
+                result.should.equal(1);
 
-            result.should.equal(1);
+                r.end();
 
-            r.end();
+                done();
 
-            done();
-
-        });
-
-    });
-
-    it("should not get a value that has been deleted", function (done) {
-
-        var r = redismock.createClient("", "", "");
-
-        r.hget(testHash, testKey, function (err, result) {
-
-            should.not.exist(result);
-
-            r.end();
-
-            done();
+            });
 
         });
 
-    });
+        it("should delete a value", function (done) {
 
-    it("should not say that deleted value exists", function (done) {
+            var r = redismock.createClient("", "", "");
 
-        var r = redismock.createClient("", "", "");
+            r.hdel(testHash, testKey, function (err, result) {
 
-        r.hexists(testHash, testKey, function (err, result) {
+                result.should.equal(1);
 
-            result.should.equal(0);
+                r.end();
 
-            r.end();
+                done();
 
-            done();
+            });
 
         });
 
+        it("should not get a value that has been deleted", function (done) {
+
+            var r = redismock.createClient("", "", "");
+            r.hdel(testHash, testKey, function (err, result) {
+                r.hget(testHash, testKey, function (err, result) {
+
+                    should.not.exist(result);
+
+                    r.end();
+
+                    done();
+
+                });
+            });
+        });
+
+        it("should not say that deleted value exists", function (done) {
+
+            var r = redismock.createClient("", "", "");
+            r.hdel(testHash, testKey, function (err, result) {
+                r.hexists(testHash, testKey, function (err, result) {
+
+                    result.should.equal(0);
+
+                    r.end();
+
+                    done();
+
+                });
+            });
+
+        });
+
+        it("should return length 0 when key does not exist", function (done) {
+
+            var r = redismock.createClient("", "", "");
+
+            r.hlen("newHash", function(err, result) {
+
+                result.should.equal(0);
+
+                r.end();
+
+                done();
+
+            });
+        });
+
+        it("should return length when key exists", function (done) {
+
+            var r = redismock.createClient("", "", "");
+
+            r.hset("newHash", testKey, testValue, function (err, result) {
+
+                r.hlen("newHash", function(err, result) {
+
+                    result.should.equal(1);
+
+                    r.hset("newHash", testKey + "2", testValue, function (err, result) {
+
+                        r.hlen("newHash", function(err, result) {
+
+                            result.should.equal(2);
+
+                            r.end();
+
+                            done();
+
+                        });
+
+                    });
+                });
+
+            });
+        });
     });
 
-	it("should return length 0 when key does not exist", function (done) {
-
-		var r = redismock.createClient("", "", "");
-
-		r.hlen("newHash", function(err, result) {
-
-			result.should.equal(0);
-
-			r.end();
-
- 			done();
-
-		});
-	});
-
-	it("should return length when key exists", function (done) {
-
-		var r = redismock.createClient("", "", "");
-
-		r.hset("newHash", testKey, testValue, function (err, result) {
-
-    		r.hlen("newHash", function(err, result) {
-
-				result.should.equal(1);
-
-				r.hset("newHash", testKey + "2", testValue, function (err, result) {
-
-					r.hlen("newHash", function(err, result) {
-
-						result.should.equal(2);
-
-						r.end();
-
-						done();
-
-					});
-
-				});
-			});
-
-		});
-	});
 });
 
 describe("hincrby", function () {
@@ -212,14 +229,24 @@ describe("hsetnx", function () {
 
     var testHash = "myHash";
     var testKey = "myKey";
+    var testKey2 = "myKey2";
     var testValue = "myValue";
     var testValue2 = "myNewTestValue";
+
+    beforeEach(function(done) {
+        var r = redismock.createClient("", "", "");
+        r.hset(testHash, testKey, testValue, function (err, result) {
+
+            done();
+
+        });
+    });
 
     it("should set a value that does not exist", function (done) {
 
         var r = redismock.createClient("", "", "");
 
-        r.hsetnx(testHash, testKey, testValue, function (err, result) {
+        r.hsetnx(testHash, testKey2, testValue, function (err, result) {
 
             result.should.equal(1);
 
@@ -260,7 +287,8 @@ describe("hsetnx", function () {
 describe("multiple get/set", function() {
 
 	var mHash = "mHash";
-  var mHashEmpty = "mHashEmpty";
+    var mHash2 = "mHash2";
+    var mHashEmpty = "mHashEmpty";
 	var mKey1 = "mKey1";
 	var mKey2 = "mKey2";
 	var mKey3 = "mKey3";
@@ -269,6 +297,14 @@ describe("multiple get/set", function() {
 	var mValue2 = "mValue2";
 	var mValue3 = "mValue3";
 	var mValue4 = "mValue4";
+
+    beforeEach(function() {
+        var r = redismock.createClient("", "", "");
+        r.hset(mHash2, mKey1, mValue1);
+        r.hset(mHash2, mKey2, mValue2);
+        r.hset(mHash2, mKey3, mValue3);
+        r.hset(mHash2, mKey4, mValue4);
+    });
 
 	// HMSET
 	it("should be able to set multiple keys as multiple arguments", function(done) {
@@ -308,7 +344,7 @@ describe("multiple get/set", function() {
 
 		var r = redismock.createClient("", "", "");
 
-		r.hkeys(mHash, function(err, result) {
+		r.hkeys(mHash2, function(err, result) {
 
 			result.indexOf(mKey1).should.not.equal(-1);
 			result.indexOf(mKey2).should.not.equal(-1);
@@ -329,7 +365,7 @@ describe("multiple get/set", function() {
 
 		var r = redismock.createClient("", "", "");
 
-		r.hgetall(mHash, function(err, result) {
+		r.hgetall(mHash2, function(err, result) {
 
 			should.exist(result);
 
