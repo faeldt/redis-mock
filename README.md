@@ -77,6 +77,17 @@ redis-mock is a WIP, why most commands are not yet available. Currently implemen
 * flushdb
 * flushall
 
+## Cross verification
+
+If you want to add new tests to the test base it is important that they work too on node_redis (we are creating a mock...).
+You can therefore run the tests using `redis` instead of `redis-mock`. To do so:
+
+```
+	make check-tests
+```
+
+> You will need to have a running instance of redis on you machine and our tests use `flushdb a lot so make sure you don't have anything important on it.
+
 ## LICENSE - "MIT License"
 
 Copyright (c) 2012 Kristian Faeldt <kristian.faeldt@gmail.com>

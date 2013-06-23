@@ -1,11 +1,15 @@
 var redismock = require("../"),
-  should = require("should"),
-  events = require("events");
+    should = require("should"),
+    events = require("events");
+
+if (process.env['VALID_TESTS']) {
+    redismock = require('redis'); 
+}
 
 describe("basic pushing/poping list", function() {
     var testKey = "myKey";
     var testKey2 = "myKey2";
-    var testValues = [1, 2, 3, 4, 5];
+    var testValues = [1, {foo: "bar"}, 3, 4, 5];
     var testValue = 10;
 
     it("should not get any value from the end", function(done) {
@@ -45,7 +49,7 @@ describe("basic pushing/poping list", function() {
 
             r.rpop(testKey, function(err, result) {
 
-                result.should.equal(testValue);
+                result.should.equal(testValue + "");
 
                 r.end();
 
@@ -64,7 +68,7 @@ describe("basic pushing/poping list", function() {
 
             r.lpop(testKey, function(err, result) {
 
-                result.should.equal(testValue);
+                result.should.equal(testValue + "");
 
                 r.end();
 
@@ -87,7 +91,7 @@ describe("basic pushing/poping list", function() {
 
                 r.rpop(testKey, function(err, result) {
 
-                  result.should.equal(testValue);
+                  result.should.equal(testValue + "");
 
                   r.end();
 
@@ -107,11 +111,11 @@ describe("basic pushing/poping list", function() {
 
             r.lpop(testKey2, function(err, result) {
 
-                result.should.equal(testValues[testValues.length - 1]);
+                result.should.equal(testValues[testValues.length - 1] + "");
 
                 r.rpop(testKey2, function(err, result) {
 
-                  result.should.equal(testValues[0]);
+                  result.should.equal(testValues[0] + "");
 
                   r.end();
 
@@ -206,11 +210,11 @@ describe("lindex", function() {
 
                 r.lindex(testKey, 0, function(err, result) {
 
-                    result.should.equal(testValues[0]);
+                    result.should.equal(testValues[0] + "");
 
                     r.lindex(testKey, testValues.length - 1, function(err, result) {
 
-                        result.should.equal(testValues[testValues.length - 1]);
+                        result.should.equal(testValues[testValues.length - 1] + '');
 
                         r.end();
 
@@ -234,11 +238,11 @@ describe("lindex", function() {
 
                 r.lindex(testKey2, -1, function(err, result) {
 
-                    result.should.equal(testValues[testValues.length - 1]);
+                    result.should.equal(testValues[testValues.length - 1] + "");
 
                     r.lindex(testKey2, -testValues.length, function(err, result) {
 
-                        result.should.equal(testValues[0]);
+                        result.should.equal(testValues[0] + '');
 
                         r.end();
 
@@ -266,8 +270,8 @@ describe("lset", function() {
         var r = redismock.createClient("", "", "");
 
         r.lset(keyUndefined, 0, 1, function(err, result) {
-
-            result.should.equal("ERR no such key");
+            err.message.should.equal("ERR no such key");
+            should.not.exist(result);
 
             r.end();
 
@@ -283,11 +287,13 @@ describe("lset", function() {
 
             r.lset(keyUndefined2, testValues.length + 1, 3, function(err, result) {
 
-                result.should.equal("ERR index out of range");
+                err.message.should.equal("ERR index out of range");
+                should.not.exist(result);
 
                 r.lset(keyUndefined2, -(testValues.length + 2), 3, function(err, result) {
 
-                    result.should.equal("ERR index out of range");
+                    err.message.should.equal("ERR index out of range");
+                    should.not.exist(result);
 
                     r.end();
 
@@ -310,7 +316,7 @@ describe("lset", function() {
 
                 r.lindex(testKey, 0, function(err, result) {
 
-                    result.should.equal(3);
+                    result.should.equal('3');
 
                     r.end();
 
@@ -333,7 +339,7 @@ describe("lset", function() {
 
                 r.lindex(testKey2, testValues.length - 1, function(err, result) {
 
-                    result.should.equal(3);
+                    result.should.equal('3');
 
                     r.end();
 
@@ -356,7 +362,7 @@ describe("lset", function() {
 
                 r.lindex(testKey3, -1, function(err, result) {
 
-                    result.should.equal(42);
+                    result.should.equal('42');
 
                     r.end();
 
@@ -379,7 +385,7 @@ describe("lset", function() {
 
                 r.lindex(testKey4, 0, function(err, result) {
 
-                    result.should.equal(45);
+                    result.should.equal('45');
 
                     r.end();
 
@@ -426,7 +432,7 @@ describe("rpushx", function (argument) {
 
                 r.lindex(testKey, 1, function(err, result) {
 
-                    result.should.equal(5);
+                    result.should.equal('5');
 
                     r.end();
 
@@ -471,7 +477,7 @@ describe("lpushx", function (argument) {
 
                 r.lindex(testKey, 0, function(err, result) {
 
-                    result.should.equal(5);
+                    result.should.equal('5');
 
                     r.end();
 
@@ -488,7 +494,7 @@ describe("brpop", function() {
         var r = redismock.createClient("", "", "");
         var time = false;
 
-        r.brpop("foo", 500, function(err, result) {
+        r.brpop("foo", 1, function(err, result) {
 
             console.log("Waiting for timeout...");
             should.not.exist(result);
@@ -496,7 +502,7 @@ describe("brpop", function() {
             done();
         });
 
-        setTimeout(function() {time = true}, 400);
+        setTimeout(function() {time = true}, 500);
     });
 
     it("should block until the end of the timeout even with multiple lists", function(done) {
@@ -504,17 +510,17 @@ describe("brpop", function() {
         var time = false;
         console.log("Waiting for timeout...");
 
-        r.brpop("foo", "ffo", 500, function(err, result) {
+        r.brpop("foo", "ffo", 1, function(err, result) {
 
             should.not.exist(result);
             time.should.equal(true);
             done();
         });
 
-        setTimeout(function() {time = true}, 400);
+        setTimeout(function() {time = true}, 500);
     });
 
-    it("should block with empty list too", function(done) {
+    it("should block with empty list", function(done) {
         var r = redismock.createClient("", "", "");
         r.rpush("foo2", "bar", function(err, result) {
 
@@ -523,44 +529,45 @@ describe("brpop", function() {
               var time = false;
               console.log("Waiting for timeout...");
 
-              r.brpop("foo2", "ffo2", 500, function(err, result) {
+              r.brpop("foo2", "ffo2", 1, function(err, result) {
 
                   should.not.exist(result);
                   time.should.equal(true);
                   done();
               });
 
-              setTimeout(function() {time = true}, 400);
+              setTimeout(function() {time = true}, 500);
             });
         });
     });
 
     it("should unblock when an element is added", function(done) {
         var r = redismock.createClient("", "", "");
+        var r2 = redismock.createClient("", "", "");
         var time = false;
         console.log("Waiting for pop...");
 
-        r.brpop("foo3", 500, function(err, result) {
-
+        r.brpop("foo3", 5, function(err, result) {
             result[0].should.equal("foo3");
             result[1].should.equal("bar");
             time.should.equal(true);
             done();
         });
 
-        setTimeout(function() {time = true}, 200);
+        setTimeout(function() {time = true}, 1000);
 
         setTimeout(function() {
-            r.rpush("foo3", "bar");
-        }, 300);
+            r2.rpush("foo3", "bar");
+        }, 1500);
     });
 
     it("should unblock when an element is added to any list", function(done) {
         var r = redismock.createClient("", "", "");
+        var r2 = redismock.createClient("", "", "");
         var time = false;
         console.log("Waiting for pop...");
 
-        r.brpop("foo3", "foo4", 500, function(err, result) {
+        r.brpop("foo3", "foo4", 2, function(err, result) {
 
             result[0].should.equal("foo4");
             result[1].should.equal("bim");
@@ -568,19 +575,20 @@ describe("brpop", function() {
             done();
         });
 
-        setTimeout(function() {time = true}, 200);
+        setTimeout(function() {time = true}, 500);
 
         setTimeout(function() {
-            r.rpush("foo4", "bim");
-        }, 300);
+            r2.rpush("foo4", "bim");
+        }, 1000);
     });
 
-    it("push with multiple elements should be condired as one", function(done) {
+    it("push with multiple elements should be consired as one", function(done) {
         var r = redismock.createClient("", "", "");
+        var r2 = redismock.createClient("", "", "");
         var time = false;
         console.log("Waiting for pop...");
 
-        r.brpop("foo5", 500, function(err, result) {
+        r.brpop("foo5", 2, function(err, result) {
 
             result[0].should.equal("foo5");
             result[1].should.equal("bam");
@@ -588,32 +596,51 @@ describe("brpop", function() {
             done();
         });
 
-        setTimeout(function() {time = true}, 200);
+        setTimeout(function() {time = true}, 500);
 
         setTimeout(function() {
-            r.rpush("foo5", "bim", "bam");
-        }, 300);
+            r2.rpush("foo5", "bim", "bam");
+        }, 1000);
     });
 
     it("should once it's unblocked it shouldn't be called again", function(done) {
         var r = redismock.createClient("", "", "");
+        var r2 = redismock.createClient("", "", "");
         var called = 0;
         console.log("Waiting for pop...");
-        r.brpop("foo6", "foo7", 500, function(err, result) {
+        r.brpop("foo6", "foo7", 2, function(err, result) {
 
             called += 1;
         });
 
         setTimeout(function() {
-            r.rpush("foo6", "bim");
-            r.rpush("foo7", "bam");
-        }, 300);
+            r2.rpush("foo6", "bim");
+            r2.rpush("foo7", "bam");
+        }, 1000);
 
         setTimeout(function() {
             called.should.equal(1);
             done();
-        }, 500);
+        }, 1500);
     });
+/** This test needs for the connection to be able to be blocked
+    it("should not work if we push with the connection which is blocked", function(done) {
+        var r = redismock.createClient("", "", "");
+        console.log("Waiting for pop...");
+        r.brpop("foo6", "foo7", 1, function(err, result) {
+
+            should.not.exist(err);
+            should.not.exist(result);
+
+            done();
+        });
+
+        setTimeout(function() {
+            r.rpush("foo6", "bim");
+            r.rpush("foo7", "bam");
+        }, 500);
+    });    
+*/
 });
 
 describe("blpop", function() {
@@ -622,15 +649,17 @@ describe("blpop", function() {
         var r = redismock.createClient("", "", "");
         var time = false;
 
-        r.blpop("foo8", 500, function(err, result) {
+        r.blpop("foo8", 1, function(err, result) {
 
             console.log("Waiting for timeout...");
             should.not.exist(result);
             time.should.equal(true);
+
             done();
+            
         });
 
-        setTimeout(function() {time = true}, 400);
+        setTimeout(function() {time = true}, 500);
     });
 
     it("should block until the end of the timeout even with multiple lists", function(done) {
@@ -638,14 +667,14 @@ describe("blpop", function() {
         var time = false;
         console.log("Waiting for timeout...");
 
-        r.blpop("foo9", "ffo9", 500, function(err, result) {
+        r.blpop("foo9", "ffo9", 1, function(err, result) {
 
             should.not.exist(result);
             time.should.equal(true);
             done();
         });
 
-        setTimeout(function() {time = true}, 400);
+        setTimeout(function() {time = true}, 500);
     });
 
     it("should block with empty list too", function(done) {
@@ -657,24 +686,25 @@ describe("blpop", function() {
               var time = false;
               console.log("Waiting for timeout...");
 
-              r.blpop("foo10", "ffo10", 500, function(err, result) {
+              r.blpop("foo10", "ffo10", 1, function(err, result) {
 
                   should.not.exist(result);
                   time.should.equal(true);
                   done();
               });
 
-              setTimeout(function() {time = true}, 400);
+              setTimeout(function() {time = true}, 500);
             });
         });
     });
 
     it("should unblock when an element is added", function(done) {
         var r = redismock.createClient("", "", "");
+        var r2 = redismock.createClient("", "", "");
         var time = false;
         console.log("Waiting for pop...");
 
-        r.blpop("foo11", 500, function(err, result) {
+        r.blpop("foo11", 1, function(err, result) {
 
             result[0].should.equal("foo11");
             result[1].should.equal("bar");
@@ -685,16 +715,17 @@ describe("blpop", function() {
         setTimeout(function() {time = true}, 200);
 
         setTimeout(function() {
-            r.rpush("foo11", "bar");
-        }, 300);
+            r2.rpush("foo11", "bar");
+        }, 500);
     });
 
     it("should unblock when an element is added to any list", function(done) {
         var r = redismock.createClient("", "", "");
+        var r2 = redismock.createClient("", "", "");
         var time = false;
         console.log("Waiting for pop...");
 
-        r.blpop("foo12", "foo13", 500, function(err, result) {
+        r.blpop("foo12", "foo13", 1, function(err, result) {
 
             result[0].should.equal("foo12");
             result[1].should.equal("bim");
@@ -705,16 +736,17 @@ describe("blpop", function() {
         setTimeout(function() {time = true}, 200);
 
         setTimeout(function() {
-            r.rpush("foo12", "bim");
-        }, 300);
+            r2.rpush("foo12", "bim");
+        }, 500);
     });
 
-    it("push with multiple elements should be condired as one", function(done) {
+    it("push with multiple elements should be considered as one", function(done) {
         var r = redismock.createClient("", "", "");
+        var r2 = redismock.createClient("", "", "");
         var time = false;
         console.log("Waiting for pop...");
 
-        r.blpop("foo14", 500, function(err, result) {
+        r.blpop("foo14", 1, function(err, result) {
 
             result[0].should.equal("foo14");
             result[1].should.equal("bam");
@@ -725,27 +757,28 @@ describe("blpop", function() {
         setTimeout(function() {time = true}, 200);
 
         setTimeout(function() {
-            r.lpush("foo14", "bim", "bam");
-        }, 300);
+            r2.lpush("foo14", "bim", "bam");
+        }, 500);
     });
 
     it("should once it's unblocked it shouldn't be called again", function(done) {
         var r = redismock.createClient("", "", "");
+        var r2 = redismock.createClient("", "", "");
         var called = 0;
         console.log("Waiting for pop...");
-        r.blpop("foo15", "foo16", 500, function(err, result) {
+        r.blpop("foo15", "foo16", 1, function(err, result) {
 
             called += 1;
         });
 
         setTimeout(function() {
-            r.rpush("foo15", "bim");
-            r.rpush("foo16", "bam");
+            r2.rpush("foo15", "bim");
+            r2.rpush("foo16", "bam");
         }, 300);
 
         setTimeout(function() {
             called.should.equal(1);
             done();
-        }, 500);
+        }, 1500);
     });
 });
