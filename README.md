@@ -58,6 +58,7 @@ redis-mock is a WIP, why most commands are not yet available. Currently implemen
 * hgetall
 * hmset
 * hkeys
+* hincrby
 
 ## Lists
 * llen
