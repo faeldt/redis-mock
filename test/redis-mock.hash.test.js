@@ -326,12 +326,17 @@ describe("multiple get/set", function() {
 	var mValue3 = "mValue3";
 	var mValue4 = "mValue4";
 
-    beforeEach(function() {
+    beforeEach(function(done) {
         var r = redismock.createClient("", "", "");
-        r.hset(mHash2, mKey1, mValue1);
-        r.hset(mHash2, mKey2, mValue2);
-        r.hset(mHash2, mKey3, mValue3);
-        r.hset(mHash2, mKey4, mValue4);
+        r.hset(mHash2, mKey1, mValue1, function() {
+            r.hset(mHash2, mKey2, mValue2, function() {
+                r.hset(mHash2, mKey3, mValue3, function() {
+                    r.hset(mHash2, mKey4, mValue4, function() {
+                        done();
+                    });
+                });
+            });
+        });
     });
 
 	// HMSET

@@ -71,11 +71,11 @@ describe("publish and subscribe", function () {
 
             done();
         });
-
+        
         r2.publish(otherChannel, "");
-        process.nextTick(function () {
-            r2.publish(channelName, "");
-        });
+        setTimeout(function() {
+                r2.publish(channelName, "");
+        }, 1000);
     });
 
     it("should support multiple subscribers", function (done) {
@@ -122,7 +122,7 @@ describe("publish and subscribe", function () {
         r3.publish(channelName, "");
         setTimeout(function() {
             r3.publish(doneChannel, "");
-        }, 500);
+        }, 2000);
 
     });
 
