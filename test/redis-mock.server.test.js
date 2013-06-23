@@ -1,6 +1,10 @@
 var redismock = require("../"),
     should = require("should");
 
+if (process.env['VALID_TESTS']) {
+    redismock = require('redis'); 
+}
+
 describe("flushdb", function () {
 
     it("should clean database", function(done) {
