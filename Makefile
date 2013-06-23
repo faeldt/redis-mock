@@ -7,7 +7,7 @@ test:
 	@$(MAKE) NODE_PATH=lib TESTS="$(ALL_TESTS)" run-tests
 
 #This is used to validate the tests work on redis_mock
-valid-test:
+check-tests:
 	@$(MAKE) NODE_PATH=lib VALID_TESTS="TRUE" TESTS="$(ALL_TESTS)" run-tests
 
 .PHONY: test
