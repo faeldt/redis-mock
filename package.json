@@ -10,7 +10,8 @@
 	},
 	"devDependencies": {
 		"should": "*",
-		"mocha": "*"
+		"mocha": "*",
+		"redis": "*"
 	},
 	"scripts": {
 		"test": "make test"
