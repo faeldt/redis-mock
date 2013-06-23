@@ -106,7 +106,7 @@ describe("publish and subscribe", function () {
                 channelNameCallsRecieved++;
             } else if (ch == doneChannel) {
 
-                should.equal(channelNameCallsRecieved, 4);
+                channelNameCallsRecieved.should.equal(4);
                 r.unsubscribe(channelName);
                 r2.unsubscribe(channelName);
                 r2.unsubscribe(doneChannel);
@@ -117,12 +117,14 @@ describe("publish and subscribe", function () {
                 done();
             }
         });
-
-        r3.publish(channelName, "");
-        r3.publish(channelName, "");
+        // Ensure the messages has got time to get to the server
         setTimeout(function() {
-            r3.publish(doneChannel, "");
-        }, 2000);
+            r3.publish(channelName, "");
+            r3.publish(channelName, "");
+            setTimeout(function() {
+                r3.publish(doneChannel, "");
+            }, 500);
+        }, 500);
 
     });
 

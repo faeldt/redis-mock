@@ -86,7 +86,7 @@ You can therefore run the tests using `redis` instead of `redis-mock`. To do so:
 	make check-tests
 ```
 
-> You will need to have a running instance of redis on you machine and our tests use flushdb a lot so make sure you don't have anything important on it.
+> You will need to have a running instance of redis on you machine and our tests use `flushdb a lot so make sure you don't have anything important on it.
 
 ## LICENSE - "MIT License"
 
