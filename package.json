@@ -1,6 +1,6 @@
 {
 	"name": "redis-mock",
-	"version": "0.1.6",
+	"version": "0.2.0",
 	"description": "Redis client mock object for unit testing",
 	"author": "Kristian Faeldt <kristian.faeldt@gmail.com>",
 	"main": "./lib/redis-mock",
@@ -10,7 +10,8 @@
 	},
 	"devDependencies": {
 		"should": "*",
-		"mocha": "*"
+		"mocha": "*",
+		"redis": "*"
 	},
 	"scripts": {
 		"test": "make test"

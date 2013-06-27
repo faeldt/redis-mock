@@ -2,6 +2,10 @@ var redismock = require("../"),
     should = require("should"),
     events = require("events");
 
+if (process.env['VALID_TESTS']) {
+    redismock = require('redis'); 
+}
+
 describe("get", function () {
 
     it("should return the value of an existing key", function(done) {
