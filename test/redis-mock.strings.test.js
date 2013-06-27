@@ -50,7 +50,7 @@ describe("get", function () {
 
 describe("incr", function () {
 
-    it("should increment number", function(done) {
+    it("should increment the number stored at key", function (done) {
 
         var r = redismock.createClient("", "", "");
 
@@ -64,18 +64,14 @@ describe("incr", function () {
 
                     result.should.eql("11");
 
+                    r.end();
                     done();
-
                 });
-
             });
-
         });
-
     });
 
-
-    it("should set 0 before performing if key does not exist", function(done) {
+    it("should set 0 before performing if the key does not exist", function (done) {
 
         var r = redismock.createClient("", "", "");
 
@@ -85,16 +81,27 @@ describe("incr", function () {
 
             r.get("bar", function (err, result) {
 
-                console.log(typeof result);
-
                 result.should.eql("1");
 
+                r.end();
                 done();
-
             });
-
         });
-
     });
 
+    it("should return error if the key contains a string that can not be represented as integer.", function (done) {
+
+        var r = redismock.createClient("", "", "");
+
+        r.set("baz", "qux", function (err, result) {
+
+            r.incr("baz", function (err, result) {
+
+                should.exists(err);
+
+                r.end();
+                done();
+            });
+        });
+    });
 });
