@@ -89,6 +89,22 @@ describe("incr", function () {
         });
     });
 
+    it("should return error if the key holds the wrong kind of value.", function (done) {
+
+        var r = redismock.createClient("", "", "");
+
+        r.hset("foo", "bar", "baz", function (err, result) {
+
+            r.incr("foo", function (err, result) {
+
+                err.message.should.eql("ERR Operation against a key holding the wrong kind of value");
+
+                r.end();
+                done();
+            });
+        });
+    });
+
     it("should return error if the key contains a string that can not be represented as integer.", function (done) {
 
         var r = redismock.createClient("", "", "");
@@ -97,7 +113,7 @@ describe("incr", function () {
 
             r.incr("baz", function (err, result) {
 
-                should.exists(err);
+                err.message.should.equal("ERR value is not an integer or out of range");
 
                 r.end();
                 done();
