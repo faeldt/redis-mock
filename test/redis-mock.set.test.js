@@ -189,3 +189,42 @@ describe('srem', function() {
   });
 
 });
+
+// TODO: Add tests of SMEMBERS
+
+describe('scard', function() {
+
+  it('should return the number of elements', function(done) {
+    var r = redismock.createClient('', '', '');
+    r.sadd('foo', 'bar', 'baz', function(err, result) {
+      r.scard('foo', function(err, result) {
+        result.should.eql(2);
+        r.end();
+        done();
+      });
+    });
+  });
+
+  it('should return 0 if key does not exist', function(done) {
+    var r = redismock.createClient('', '', '');
+    r.sadd('foo', 'bar', 'baz', function(err, result) {
+      r.scard('qux', function(err, result) {
+        result.should.eql(0);
+        r.end();
+        done();
+      });
+    });
+  });
+
+  it('should return error when the value stored at the key is not a set', function(done) {
+    var r = redismock.createClient('', '', '');
+    r.hset('foo', 'bar', 'baz', function(err, result) {
+      r.scard('foo', function(err, result) {
+        err.message.should.eql('ERR Operation against a key holding the wrong kind of value');
+        r.end();
+        done();
+      });
+    });
+  });
+
+});
