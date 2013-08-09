@@ -3,7 +3,7 @@ var redismock = require("../"),
     events = require("events");
 
 if (process.env['VALID_TESTS']) {
-    redismock = require('redis'); 
+    redismock = require('redis');
 }
 
 describe("get", function () {
@@ -43,6 +43,59 @@ describe("get", function () {
 
         });
 
+
+    });
+
+});
+
+describe("setex", function () {
+
+    it("should set a key", function (done) {
+
+        var r = redismock.createClient("", "", "");
+
+        r.setex("test", 10000, "val", function (err, result) {
+
+            result.should.equal(1);
+
+            r.get("test", function(err, result) {
+                result.should.equal("val");
+
+                r.end();
+                done();
+            });
+
+        });
+
+    });
+
+    it("should set a disappearing key", function (done) {
+
+        var r = redismock.createClient("", "", "");
+
+        r.setex("test", 1, "val", function (err, result) {
+
+            result.should.equal(1);
+
+            setTimeout(function () {
+                console.log("Waiting for expire...");
+            }, 1000);
+
+            setTimeout(function () {
+
+                r.exists("test", function (err, result) {
+
+                    result.should.equal(0);
+
+                    r.end();
+
+                    done();
+
+                });
+
+            }, 2100);
+
+        });
 
     });
 
