@@ -56,7 +56,7 @@ describe("setex", function () {
 
         r.setex("test", 10000, "val", function (err, result) {
 
-            result.should.equal(1);
+            result.should.be.ok;
 
             r.get("test", function(err, result) {
                 result.should.equal("val");
@@ -75,7 +75,7 @@ describe("setex", function () {
 
         r.setex("test", 1, "val", function (err, result) {
 
-            result.should.equal(1);
+            result.should.be.ok;
 
             setTimeout(function () {
                 console.log("Waiting for expire...");
