@@ -178,15 +178,14 @@ describe("lrange", function() {
     var testValues = [1, 2, 3, 4, 5];
     var testValue = 10;
 
-    it("should return empty array", function(donefn) {
+    it("should return empty array", function(done) {
 
         var r = redismock.createClient("", "", "");
 
-        r.lrange(testKey, function(err, result) {
-            result.should.equal([]);
+        r.lrange(testKey, 0, -1, function(err, result) {
+            result.should.have.length(0);
             r.end();
-            console.log('asdasdasd');
-            donefn();
+            done();
         });
     });
 
