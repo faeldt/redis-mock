@@ -2,13 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0ec25243-2fc2-4f31-b3ce-b7e835ac52f8" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Makefile" afterPath="$PROJECT_DIR$/Makefile" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/item.js" afterPath="$PROJECT_DIR$/lib/item.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/list.js" afterPath="$PROJECT_DIR$/lib/list.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/redis-mock.list.test.js" afterPath="$PROJECT_DIR$/test/redis-mock.list.test.js" />
     </list>
     <ignored path="redis-mock.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/Dummy.txt" changelist="0ec25243-2fc2-4f31-b3ce-b7e835ac52f8" time="1386340489630" ignored="false" />
-    <file path="/redis-mock.list.test.js" changelist="0ec25243-2fc2-4f31-b3ce-b7e835ac52f8" time="1386347312084" ignored="false" />
-    <file path="/list.js" changelist="0ec25243-2fc2-4f31-b3ce-b7e835ac52f8" time="1386348926587" ignored="false" />
+    <file path="/redis-mock.list.test.js" changelist="0ec25243-2fc2-4f31-b3ce-b7e835ac52f8" time="1386349862231" ignored="false" />
+    <file path="/list.js" changelist="0ec25243-2fc2-4f31-b3ce-b7e835ac52f8" time="1386353526141" ignored="false" />
     <file path="/redis-mock.js" changelist="0ec25243-2fc2-4f31-b3ce-b7e835ac52f8" time="1386347411374" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -45,7 +48,16 @@
           <file leaf-file-name="list.js" pinned="false" current="true" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/lib/list.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state line="217" column="62" selection-start="6568" selection-end="6568" vertical-scroll-proportion="0.8299156">
+                <state line="211" column="71" selection-start="6436" selection-end="6436" vertical-scroll-proportion="0.7515078">
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="item.js" pinned="false" current="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/lib/item.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state line="78" column="2" selection-start="1671" selection-end="1671" vertical-scroll-proportion="0.0">
                   <folding />
                 </state>
               </provider>
@@ -58,7 +70,7 @@
           <file leaf-file-name="redis-mock.list.test.js" pinned="false" current="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/test/redis-mock.list.test.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state line="768" column="46" selection-start="19799" selection-end="19799" vertical-scroll-proportion="0.33254156">
+                <state line="827" column="34" selection-start="21378" selection-end="21378" vertical-scroll-proportion="0.7327791">
                   <folding />
                 </state>
               </provider>
@@ -84,9 +96,9 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/lib/item.js" />
-        <option value="$PROJECT_DIR$/test/redis-mock.list.test.js" />
         <option value="$PROJECT_DIR$/lib/redis-mock.js" />
+        <option value="$PROJECT_DIR$/test/redis-mock.list.test.js" />
+        <option value="$PROJECT_DIR$/lib/item.js" />
         <option value="$PROJECT_DIR$/lib/list.js" />
       </list>
     </option>
@@ -291,20 +303,11 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/lib/item.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="104" column="2" selection-start="2193" selection-end="2193" vertical-scroll-proportion="1.8527316">
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/server.js">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
           <folding>
-            <element signature="n#!!doc" expanded="true" />
+            <element signature="n#!!doc" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -312,13 +315,6 @@
     <entry file="file://$PROJECT_DIR$/test/redis-mock.test.js">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.57957244">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/redis-mock.list.test.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="768" column="46" selection-start="19799" selection-end="19799" vertical-scroll-proportion="0.33254156">
           <folding />
         </state>
       </provider>
@@ -332,9 +328,23 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/test/redis-mock.list.test.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="827" column="34" selection-start="21378" selection-end="21378" vertical-scroll-proportion="0.7327791">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/item.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="78" column="2" selection-start="1671" selection-end="1671" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/lib/list.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="217" column="62" selection-start="6568" selection-end="6568" vertical-scroll-proportion="0.8299156">
+        <state line="211" column="71" selection-start="6436" selection-end="6436" vertical-scroll-proportion="0.7515078">
           <folding />
         </state>
       </provider>

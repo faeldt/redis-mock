@@ -807,6 +807,30 @@ describe("rpoplpush", function() {
         r.rpoplpush( fromKey, toKey, callback );
     });
 
-    it("should pop/push from a known queue to another");
+    it("should pop/push from a known queue to another", function(done) {
+        var r = redismock.createClient("", "", "" ),
+            fromKey = 'MyFromQueue',
+            toKey = 'MyMasterQueue',
+            testValue = 'this is my test';
+
+
+        var r = redismock.createClient("", "", "");
+
+        var callback = function(err, result) {
+            should.exist( result );
+            result.should.equal( testValue );
+
+            // TODO check the length of fromKey to insure = 0 toKey to insure = 1
+
+            done();
+        };
+
+        r.lpush(fromKey, testValue, function(err, result) {
+            should.exist(result);
+
+            r.rpoplpush( fromKey, toKey, callback );
+        });
+
+    });
 });
 
