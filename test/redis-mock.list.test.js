@@ -782,3 +782,31 @@ describe("blpop", function() {
         }, 1500);
     });
 });
+
+describe("rpoplpush", function() {
+    it("client should have a rpoplpush method", function() {
+        var r = redismock.createClient("", "", "");
+
+        should.exist( r.rpoplpush );
+        r.rpoplpush.should.be.type('function');
+        r.RPOPLPUSH.should.be.type('function');
+    });
+
+    it("should not pop/push from empty queue to another", function(done) {
+        var r = redismock.createClient("", "", "" ),
+            fromKey = 'MyFromQueue',
+            toKey = 'MyMasterQueue';
+
+        var callback = function(err, obj) {
+            should.not.exist( err );
+            should.not.exist( obj );
+
+            done();
+        };
+
+        r.rpoplpush( fromKey, toKey, callback );
+    });
+
+    it("should pop/push from a known queue to another");
+});
+
