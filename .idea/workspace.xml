@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0ec25243-2fc2-4f31-b3ce-b7e835ac52f8" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Makefile" afterPath="$PROJECT_DIR$/Makefile" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/item.js" afterPath="$PROJECT_DIR$/lib/item.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/list.js" afterPath="$PROJECT_DIR$/lib/list.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/redis-mock.list.test.js" afterPath="$PROJECT_DIR$/test/redis-mock.list.test.js" />
     </list>
@@ -11,7 +9,7 @@
     <ignored path=".idea/workspace.xml" />
     <file path="/Dummy.txt" changelist="0ec25243-2fc2-4f31-b3ce-b7e835ac52f8" time="1386340489630" ignored="false" />
     <file path="/redis-mock.list.test.js" changelist="0ec25243-2fc2-4f31-b3ce-b7e835ac52f8" time="1386349862231" ignored="false" />
-    <file path="/list.js" changelist="0ec25243-2fc2-4f31-b3ce-b7e835ac52f8" time="1386353526141" ignored="false" />
+    <file path="/list.js" changelist="0ec25243-2fc2-4f31-b3ce-b7e835ac52f8" time="1386354163404" ignored="false" />
     <file path="/redis-mock.js" changelist="0ec25243-2fc2-4f31-b3ce-b7e835ac52f8" time="1386347411374" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -31,7 +29,7 @@
     <favorites_list name="redis-mock" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.46893018">
+    <splitter split-orientation="horizontal" split-proportion="0.5355541">
       <split-first>
         <leaf>
           <file leaf-file-name="redis-mock.js" pinned="false" current="false" current-in-tab="false">
@@ -48,7 +46,7 @@
           <file leaf-file-name="list.js" pinned="false" current="true" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/lib/list.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state line="211" column="71" selection-start="6436" selection-end="6436" vertical-scroll-proportion="0.7515078">
+                <state line="217" column="23" selection-start="6622" selection-end="6622" vertical-scroll-proportion="0.807601">
                   <folding />
                 </state>
               </provider>
@@ -70,7 +68,7 @@
           <file leaf-file-name="redis-mock.list.test.js" pinned="false" current="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/test/redis-mock.list.test.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state line="827" column="34" selection-start="21378" selection-end="21378" vertical-scroll-proportion="0.7327791">
+                <state line="519" column="0" selection-start="12604" selection-end="12604" vertical-scroll-proportion="0.60193">
                   <folding />
                 </state>
               </provider>
@@ -97,8 +95,8 @@
     <option name="changedFiles">
       <list>
         <option value="$PROJECT_DIR$/lib/redis-mock.js" />
-        <option value="$PROJECT_DIR$/test/redis-mock.list.test.js" />
         <option value="$PROJECT_DIR$/lib/item.js" />
+        <option value="$PROJECT_DIR$/test/redis-mock.list.test.js" />
         <option value="$PROJECT_DIR$/lib/list.js" />
       </list>
     </option>
@@ -328,13 +326,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/redis-mock.list.test.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="827" column="34" selection-start="21378" selection-end="21378" vertical-scroll-proportion="0.7327791">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/item.js">
       <provider selected="true" editor-type-id="text-editor">
         <state line="78" column="2" selection-start="1671" selection-end="1671" vertical-scroll-proportion="0.0">
@@ -342,9 +333,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/test/redis-mock.list.test.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="519" column="0" selection-start="12604" selection-end="12604" vertical-scroll-proportion="0.60193">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/lib/list.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="211" column="71" selection-start="6436" selection-end="6436" vertical-scroll-proportion="0.7515078">
+        <state line="217" column="23" selection-start="6622" selection-end="6622" vertical-scroll-proportion="0.807601">
           <folding />
         </state>
       </provider>

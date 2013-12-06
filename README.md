@@ -72,6 +72,7 @@ redis-mock is a WIP, why most commands are not yet available. Currently implemen
 * brpop
 * lindex
 * lset
+* rpoplpush
 
 ## Server
 * flushdb

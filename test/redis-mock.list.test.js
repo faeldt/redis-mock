@@ -488,6 +488,57 @@ describe("lpushx", function (argument) {
     });
 });
 
+describe("rpoplpush", function() {
+    it("client should have a rpoplpush method", function() {
+        var r = redismock.createClient("", "", "");
+
+        should.exist( r.rpoplpush );
+        r.rpoplpush.should.be.type('function');
+        r.RPOPLPUSH.should.be.type('function');
+    });
+
+    it("should not pop/push from empty queue to another", function(done) {
+        var r = redismock.createClient("", "", "" ),
+            fromKey = 'MyFromQueue',
+            toKey = 'MyMasterQueue';
+
+        var callback = function(err, obj) {
+            should.not.exist( err );
+            should.not.exist( obj );
+
+            done();
+        };
+
+        r.rpoplpush( fromKey, toKey, callback );
+    });
+
+    it("should pop/push from a known queue to another", function(done) {
+        var r = redismock.createClient("", "", "" ),
+            fromKey = 'MyFromQueue',
+            toKey = 'MyMasterQueue',
+            testValue = 'this is my test';
+
+        var r = redismock.createClient("", "", "");
+
+        var callback = function(err, result) {
+            should.exist( result );
+            result.should.equal( testValue );
+
+            // TODO check the length of fromKey to insure = 0 toKey to insure = 1
+
+            done();
+        };
+
+        r.lpush(fromKey, testValue, function(err, result) {
+            should.exist(result);
+
+            r.rpoplpush( fromKey, toKey, callback );
+        });
+
+    });
+});
+
+
 describe("brpop", function() {
     it("should block until the end of the timeout", function(done) {
 
@@ -783,54 +834,4 @@ describe("blpop", function() {
     });
 });
 
-describe("rpoplpush", function() {
-    it("client should have a rpoplpush method", function() {
-        var r = redismock.createClient("", "", "");
-
-        should.exist( r.rpoplpush );
-        r.rpoplpush.should.be.type('function');
-        r.RPOPLPUSH.should.be.type('function');
-    });
-
-    it("should not pop/push from empty queue to another", function(done) {
-        var r = redismock.createClient("", "", "" ),
-            fromKey = 'MyFromQueue',
-            toKey = 'MyMasterQueue';
-
-        var callback = function(err, obj) {
-            should.not.exist( err );
-            should.not.exist( obj );
-
-            done();
-        };
-
-        r.rpoplpush( fromKey, toKey, callback );
-    });
-
-    it("should pop/push from a known queue to another", function(done) {
-        var r = redismock.createClient("", "", "" ),
-            fromKey = 'MyFromQueue',
-            toKey = 'MyMasterQueue',
-            testValue = 'this is my test';
-
-
-        var r = redismock.createClient("", "", "");
-
-        var callback = function(err, result) {
-            should.exist( result );
-            result.should.equal( testValue );
-
-            // TODO check the length of fromKey to insure = 0 toKey to insure = 1
-
-            done();
-        };
-
-        r.lpush(fromKey, testValue, function(err, result) {
-            should.exist(result);
-
-            r.rpoplpush( fromKey, toKey, callback );
-        });
-
-    });
-});
 
