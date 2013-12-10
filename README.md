@@ -79,7 +79,9 @@ Forked from https://github.com/faeldt/redis-mock, with more commands. Currently 
 * flushall
 
 ## Transactions
-* every previous one
+* multi
+* exec
+* every previous supported commands can be chained
 
 ## Cross verification
 
