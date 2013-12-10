@@ -1,23 +1,23 @@
-redis-mock
-============
-The goal of the redis-mock project is to create a feature-complete mock of https://github.com/mranney/node_redis, so that it may be used interchangeably when writing unit tests for code that depends on Redis.
+node-redis-mock
+===============
+The goal of the node-redis-mock project is to create a feature-complete mock of https://github.com/mranney/node_redis, so that it may be used interchangeably when writing unit tests for code that depends on Redis.
 
-All operations are performed in-memory, why no Redis installation is required.
+No Redis installation is required: all operations are performed in-memory.
 
 Install with:
 
-	npm install redis-mock
+	npm install node-redis-mock
 
 ## Usage
 
 ```js
-var redis = require("redis-mock"),
+var redis = require("node-redis-mock"),
     client = redis.createClient();
 ```
 
 # API
 
-redis-mock is a WIP, why most commands are not yet available. Currently implemented are the following:
+Forked from https://github.com/faeldt/redis-mock, with more commands. Currently implemented are the following:
 
 ## General
 
@@ -90,7 +90,7 @@ You can therefore run the tests using `redis` instead of `redis-mock`. To do so:
 
 ## LICENSE - "MIT License"
 
-Copyright (c) 2012 Kristian Faeldt <kristian.faeldt@gmail.com>
+Copyright (c) 2013 Amsellem Yves <amsellem.yves@gmail.com>
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
