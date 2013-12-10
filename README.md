@@ -47,6 +47,7 @@ Forked from https://github.com/faeldt/redis-mock, with more commands. Currently 
 ## Strings
 * get
 * set
+* incr
 
 ## Hashing
 * hset
@@ -76,6 +77,9 @@ Forked from https://github.com/faeldt/redis-mock, with more commands. Currently 
 ## Server
 * flushdb
 * flushall
+
+## Transactions
+* every previous one
 
 ## Cross verification
 

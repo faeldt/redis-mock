@@ -1,10 +1,9 @@
-TESTS = $(shell find test/ -name '*.transactions.test.js')
+TESTS = $(shell find test/ -name '*.test.js')
 
 run-tests:
 	@./node_modules/.bin/mocha --timeout 3000 $(TESTS)
 
 test:
-	echo $(TESTS)
 	@$(MAKE) NODE_PATH=lib TESTS="$(TESTS)" run-tests
 
 #This is used to validate the tests work on redis_mock
