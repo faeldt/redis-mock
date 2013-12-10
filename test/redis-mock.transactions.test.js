@@ -22,7 +22,7 @@ describe("transactions", function () {
         var r = redismock.createClient("", "", "");
 
         var multiqueue = r.multi();
-        multiqueue.set("foo", "baz");
+        multiqueue = multiqueue.set("foo", "baz");
         multiqueue.exec(function (err) {
 
             r.get("foo", function (err, result) {
