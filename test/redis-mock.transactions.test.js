@@ -41,6 +41,8 @@ describe("transactions", function () {
         var multiqueue = r.multi();
         multiqueue.set("foo", "baz");
         multiqueue.set("foo", "bar");
+        multiqueue.set("fool", "bal");
+        //multiqueue.get("foo");
         multiqueue.exec(function (err) {
 
             r.get("foo", function (err, result) {
