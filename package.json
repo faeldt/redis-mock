@@ -1,6 +1,6 @@
 {
 	"name": "node-redis-mock",
-	"version": "0.2.6",
+	"version": "0.2.7",
 	"description": "Redis client mock object for unit testing",
 	"author": "Kristian Faeldt <kristian.faeldt@gmail.com>",
 	"main": "./lib/node-redis-mock",
@@ -18,6 +18,6 @@
 	},
 	"contributors": [
 		"lahabana (Charly Molter) <charly.molter@gmail.com>",
-                "yamsellem (Amsellem Yves) <amsellem.yves@gmail.com>"
+        "yamsellem (Amsellem Yves) <amsellem.yves@gmail.com>"
 	]
 }
