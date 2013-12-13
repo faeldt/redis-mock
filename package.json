@@ -1,22 +1,23 @@
 {
-	"name": "redis-mock",
-	"version": "0.2.5",
-	"description": "Redis client mock object for unit testing",
-	"author": "Kristian Faeldt <kristian.faeldt@gmail.com>",
-	"main": "./lib/redis-mock",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/faeldt/redis-mock.git"
-	},
-	"devDependencies": {
-		"should": "*",
-		"mocha": "*",
-		"redis": "*"
-	},
-	"scripts": {
-		"test": "make test"
-	},
-	"contributors": [
-		"lahabana (Charly Molter) <charly.molter@gmail.com>"
-	]
+  "name": "redis-mock",
+  "version": "0.2.5",
+  "description": "Redis client mock object for unit testing",
+  "author": "Kristian Faeldt <kristian.faeldt@gmail.com>",
+  "main": "./lib/redis-mock",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/faeldt/redis-mock.git"
+  },
+  "devDependencies": {
+    "should": "*",
+    "mocha": "*",
+    "redis": "*",
+    "sinon": "~1.7.3"
+  },
+  "scripts": {
+    "test": "make test"
+  },
+  "contributors": [
+    "lahabana (Charly Molter) <charly.molter@gmail.com>"
+  ]
 }
