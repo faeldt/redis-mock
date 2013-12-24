@@ -393,6 +393,25 @@ describe("multiple get/set", function() {
 
     });
 
+    it("should be able to get multiple keys as an array", function(done) {
+
+        var r = redismock.createClient("", "", "");
+
+        r.hmset(mHash, { mKey1: mValue1, mKey2: mValue2}, function(err, result) {
+
+            r.hmget(mHash, [ mKey1, mKey2, "bogus key 5" ], function(err, result) {
+
+                result.should.eql([ mValue1, mValue2, null ]);
+
+                r.end();
+
+                done();
+
+            });
+
+        });
+
+    });
 
     it("should refuse to get an empty list of values", function(done) {
 
