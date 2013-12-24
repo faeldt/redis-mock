@@ -372,6 +372,45 @@ describe("multiple get/set", function() {
 
 	});
 
+    // HMGET
+    it("should be able to get multiple keys as multiple arguments", function(done) {
+
+        var r = redismock.createClient("", "", "");
+
+        r.hmset(mHash, { mKey3: mValue3, mKey4: mValue4}, function(err, result) {
+
+            r.hmget(mHash, mKey3, mKey4, function(err, result) {
+
+                result.should.eql([ mValue3, mValue4 ]);
+
+                r.end();
+
+                done();
+
+            });
+
+        });
+
+    });
+
+
+    it("should refuse to get an empty list of values", function(done) {
+
+        var r = redismock.createClient("", "", "");
+
+        r.hmget(mHash, function (err, result) {
+
+            should.not.exist(result);
+
+            err.message.should.equal("ERR wrong number of arguments for 'hmget' command");
+
+            r.end();
+
+            done();
+        });
+    });
+
+
 	//HKEYS
 	it("should be able to get all keys for hash", function(done) {
 
