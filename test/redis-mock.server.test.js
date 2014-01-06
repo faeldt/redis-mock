@@ -6,8 +6,6 @@ if (process.env['VALID_TESTS']) {
 }
 
 describe('server', function() {
-
-
     describe("flushdb", function () {
 
         it("should clean database", function(done) {
@@ -33,6 +31,19 @@ describe('server', function() {
 
         });
 
+    });
+
+    describe('dbsize', function() {
+        it('should return the size of the database');
+    });
+
+    describe('save/lastsave', function() {
+        it('should save the database and store the last saved time');
+        it('should report the last time the data was save');
+    });
+
+    describe('time', function() {
+        it('should return the time object');
     });
 
     describe('ping', function() {
