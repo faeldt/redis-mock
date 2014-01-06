@@ -77,6 +77,11 @@ redis-mock is a WIP, why most commands are not yet available. Currently implemen
 ## Server
 * flushdb
 * flushall
+* save
+* lastsave
+* time
+* dbsize (always returns zero)
+* ping
 
 ## Cross verification
 
