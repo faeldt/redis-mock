@@ -11,23 +11,24 @@ describe('server', function() {
 
         it("should clean database", function(done) {
 
-            var callback = function(err, result) {
-                client.flushdb(function (err, result) {
-                    result.should.equal("OK");
-                    
-                    client.exists("foo", function(err, result) {
+            var existsCallback = function(err, result) {
+                result.should.be.equal(0);
 
-                        result.should.be.equal(0);
-
-                        client.end();
-                        done();
-                    })
-
-
-                });
+                client.end();
+                done();
             };
 
-            client.set("foo", "bar", callback);
+            var flushCallback = function(err, result) {
+                result.should.equal("OK");
+                    
+                client.exists("foo", existsCallback);
+            };
+
+            var saveCallback = function(err, result) {
+                client.flushdb( flushCallback ); 
+            };
+
+            client.set("foo", "bar", saveCallback);
         });
     });
 
@@ -47,8 +48,34 @@ describe('server', function() {
     });
 
     describe('save/lastsave', function() {
-        it('should save the database and store the last saved time');
-        it('should report the last time the data was save');
+        var client = redismock.createClient(),
+            now = Math.round( Date.now() / 1000 );
+
+        it('should save the database and store the last saved time', function(done) {
+            var callback = function(err, result) {
+                should.not.exist( err );
+                should.exist( result );
+
+                result.should.equal( 'OK' );
+
+                done();
+            };
+
+            client.save( callback );
+        });
+
+        it('should report the last time the data was save', function(done) {
+            var callback = function(err, result) {
+                should.not.exist( err );
+                should.exist( result );
+
+                result.should.be.within( now, now + 1 );
+
+                done();
+            };
+
+            client.lastsave( callback );
+        });
     });
 
     describe('time', function() {
@@ -58,7 +85,7 @@ describe('server', function() {
                 should.exist( result );
 
                 result.length.should.equal( 2 );
-                console.log( result );
+                // console.log( result );
 
                 var now = Math.round( Date.now() / 1000 ),
                     seconds = result[0],
