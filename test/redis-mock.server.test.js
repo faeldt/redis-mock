@@ -5,24 +5,29 @@ if (process.env['VALID_TESTS']) {
     redismock = require('redis'); 
 }
 
-describe("flushdb", function () {
+describe('server', function() {
 
-    it("should clean database", function(done) {
 
-        var r = redismock.createClient();
+    describe("flushdb", function () {
 
-        r.set("foo", "bar", function (err, result) {
-            r.flushdb(function (err, result) {
-                result.should.equal("OK");
-                
-                r.exists("foo", function(err, result) {
+        it("should clean database", function(done) {
 
-                    result.should.be.equal(0);
+            var r = redismock.createClient();
 
-                    r.end();
-                    done();
-                })
+            r.set("foo", "bar", function (err, result) {
+                r.flushdb(function (err, result) {
+                    result.should.equal("OK");
+                    
+                    r.exists("foo", function(err, result) {
 
+                        result.should.be.equal(0);
+
+                        r.end();
+                        done();
+                    })
+
+
+                });
 
             });
 
@@ -30,5 +35,20 @@ describe("flushdb", function () {
 
     });
 
-});
+    describe('ping', function() {
+        it('should return a pong', function(done) {
+            var r = redismock.createClient();
 
+            var callback = function(err, response) {
+                should.not.exist( err );
+                should.exist( response );
+
+                response.should.equal( 'PONG' );
+
+                done();
+            };
+
+            r.ping( callback );
+        });
+    })
+});
