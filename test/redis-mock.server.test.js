@@ -6,35 +6,44 @@ if (process.env['VALID_TESTS']) {
 }
 
 describe('server', function() {
-    describe("flushdb", function () {
+    describe("flushdb", function (done) {
+        var client = redismock.createClient();
 
         it("should clean database", function(done) {
 
-            var r = redismock.createClient();
-
-            r.set("foo", "bar", function (err, result) {
-                r.flushdb(function (err, result) {
+            var callback = function(err, result) {
+                client.flushdb(function (err, result) {
                     result.should.equal("OK");
                     
-                    r.exists("foo", function(err, result) {
+                    client.exists("foo", function(err, result) {
 
                         result.should.be.equal(0);
 
-                        r.end();
+                        client.end();
                         done();
                     })
 
 
                 });
+            };
 
-            });
-
+            client.set("foo", "bar", callback);
         });
-
     });
 
     describe('dbsize', function() {
-        it('should return the size of the database');
+        it('should return the size of the database', function(done) {
+            var callback = function(err, result) {
+                should.not.exist( err );
+                should.exist( result );
+
+                result.should.equal( 0 );
+
+                done();
+            };
+
+            redismock.createClient().dbsize( callback );
+        });
     });
 
     describe('save/lastsave', function() {
@@ -48,8 +57,6 @@ describe('server', function() {
 
     describe('ping', function() {
         it('should return a pong', function(done) {
-            var r = redismock.createClient();
-
             var callback = function(err, response) {
                 should.not.exist( err );
                 should.exist( response );
@@ -59,7 +66,7 @@ describe('server', function() {
                 done();
             };
 
-            r.ping( callback );
+            redismock.createClient().ping( callback );
         });
     })
 });
