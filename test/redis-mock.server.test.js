@@ -52,7 +52,26 @@ describe('server', function() {
     });
 
     describe('time', function() {
-        it('should return the time object');
+        it('should return the time object', function(done) {
+            var callback = function(err, result) {
+                should.not.exist( err );
+                should.exist( result );
+
+                result.length.should.equal( 2 );
+                console.log( result );
+
+                var now = Math.round( Date.now() / 1000 ),
+                    seconds = result[0],
+                    micros = result[1];
+
+                seconds.should.be.within( now - 5, now + 1 );
+                micros.should.be.within( 0, 999999 );
+
+                done();
+            };
+
+            redismock.createClient().time( callback );
+        });
     });
 
     describe('ping', function() {
