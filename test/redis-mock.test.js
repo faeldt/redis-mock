@@ -82,3 +82,17 @@ describe("redis-mock", function () {
     });
 */
 });
+
+describe("redis-error-mock", function () {
+    it("should emit a connection error", function (done) {
+        var redis = new redismock.RedisErrorMock();
+
+        var r = redis.createClient("", "", "");
+        should.exist(r);
+
+        r.once("error", function (err) {
+            err.should.equal("Connection error");
+            done();
+        });
+    });
+});
