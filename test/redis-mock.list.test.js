@@ -3,7 +3,7 @@ var redismock = require("../"),
     events = require("events");
 
 if (process.env['VALID_TESTS']) {
-    redismock = require('redis'); 
+    redismock = require('redis');
 }
 
 describe("basic pushing/poping list", function() {
@@ -171,6 +171,43 @@ describe("llen", function() {
         r.lpush.apply(r, [testKey].concat(testValues, cb));
     });
 
+});
+
+describe("lrange", function() {
+    var testKey = "myKey10";
+    var testValues = [1, 2, 3, 4, 5];
+    var testValue = 10;
+
+    it("should return empty array", function(done) {
+
+        var r = redismock.createClient("", "", "");
+
+        r.lrange(testKey, 0, -1, function(err, result) {
+            result.should.have.length(0);
+            r.end();
+            done();
+        });
+    });
+
+    it("should return [1,2,3,4,5] and evolve", function(done) {
+
+        var r = redismock.createClient("", "", "");
+
+        var cb = function(err, res) {
+            r.lrange(testKey, 0, -1, function(err, result) {
+                result.should.have.length(testValues.length);
+
+                r.rpop(testKey, function (err, result) {
+                    r.lrange(testKey, 0, -1, function(err, result) {
+                        result.should.have.length(testValues.length - 1);
+                        r.end();
+                        done();
+                    });
+                });
+            });
+        };
+        r.rpush.apply(r, [testKey].concat(testValues, cb));
+    });
 });
 
 describe("lindex", function() {
@@ -690,7 +727,7 @@ describe("brpop", function() {
             r.rpush("foo6", "bim");
             r.rpush("foo7", "bam");
         }, 500);
-    });    
+    });
 */
 });
 
@@ -707,7 +744,7 @@ describe("blpop", function() {
             time.should.equal(true);
 
             done();
-            
+
         });
 
         setTimeout(function() {time = true}, 500);
