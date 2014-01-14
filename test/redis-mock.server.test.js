@@ -49,9 +49,10 @@ describe('server', function() {
 
     describe('save/lastsave', function() {
         var client = redismock.createClient(),
-            now = Math.round( Date.now() / 1000 );
+            now;
 
         it('should save the database and store the last saved time', function(done) {
+            now = Math.round( Date.now() / 1000 );
             var callback = function(err, result) {
                 should.not.exist( err );
                 should.exist( result );
