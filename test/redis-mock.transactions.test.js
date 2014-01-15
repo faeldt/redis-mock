@@ -53,4 +53,28 @@ describe("transactions", function () {
             });
         });
     });
+
+    it("should return multiple results", function(done) {
+        
+        var r = redismock.createClient("", "", "");
+
+        // start a separate multi command queue
+        multi = r.multi();
+        multi.incr("incr thing");
+        multi.incr("incr other thing");
+
+        // runs immediately
+        r.set("incr thing", 100);
+        r.set("incr other thing", 1);
+
+        // drains multi queue and runs atomically
+        multi.exec(function (err, replies) {
+            should.not.exist(err);
+            replies.length.should.equal(2);
+            replies[0].should.equal(101);
+            replies[1].should.equal(2);
+            r.end();
+            done();
+        });
+    });
 });
