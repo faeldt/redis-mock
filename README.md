@@ -73,10 +73,16 @@ Forked from https://github.com/faeldt/redis-mock, with more commands. Currently 
 * brpop
 * lindex
 * lset
+* rpoplpush
 
 ## Server
 * flushdb
 * flushall
+* save
+* lastsave
+* time
+* dbsize (always returns zero)
+* ping
 
 ## Transactions
 * multi
