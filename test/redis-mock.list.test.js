@@ -3,7 +3,7 @@ var redismock = require("../"),
     events = require("events");
 
 if (process.env['VALID_TESTS']) {
-    redismock = require('redis'); 
+    redismock = require('redis');
 }
 
 describe("basic pushing/poping list", function() {
@@ -171,6 +171,43 @@ describe("llen", function() {
         r.lpush.apply(r, [testKey].concat(testValues, cb));
     });
 
+});
+
+describe("lrange", function() {
+    var testKey = "myKey10";
+    var testValues = [1, 2, 3, 4, 5];
+    var testValue = 10;
+
+    it("should return empty array", function(done) {
+
+        var r = redismock.createClient("", "", "");
+
+        r.lrange(testKey, 0, -1, function(err, result) {
+            result.should.have.length(0);
+            r.end();
+            done();
+        });
+    });
+
+    it("should return [1,2,3,4,5] and evolve", function(done) {
+
+        var r = redismock.createClient("", "", "");
+
+        var cb = function(err, res) {
+            r.lrange(testKey, 0, -1, function(err, result) {
+                result.should.have.length(testValues.length);
+
+                r.rpop(testKey, function (err, result) {
+                    r.lrange(testKey, 0, -1, function(err, result) {
+                        result.should.have.length(testValues.length - 1);
+                        r.end();
+                        done();
+                    });
+                });
+            });
+        };
+        r.rpush.apply(r, [testKey].concat(testValues, cb));
+    });
 });
 
 describe("lindex", function() {
@@ -488,6 +525,57 @@ describe("lpushx", function (argument) {
     });
 });
 
+describe("rpoplpush", function() {
+    it("client should have a rpoplpush method", function() {
+        var r = redismock.createClient("", "", "");
+
+        should.exist( r.rpoplpush );
+        r.rpoplpush.should.be.type('function');
+        r.RPOPLPUSH.should.be.type('function');
+    });
+
+    it("should not pop/push from empty queue to another", function(done) {
+        var r = redismock.createClient("", "", "" ),
+            fromKey = 'MyFromQueue',
+            toKey = 'MyMasterQueue';
+
+        var callback = function(err, obj) {
+            should.not.exist( err );
+            should.not.exist( obj );
+
+            done();
+        };
+
+        r.rpoplpush( fromKey, toKey, callback );
+    });
+
+    it("should pop/push from a known queue to another", function(done) {
+        var r = redismock.createClient("", "", "" ),
+            fromKey = 'MyFromQueue',
+            toKey = 'MyMasterQueue',
+            testValue = 'this is my test';
+
+        var r = redismock.createClient("", "", "");
+
+        var callback = function(err, result) {
+            should.exist( result );
+            result.should.equal( testValue );
+
+            // TODO check the length of fromKey to insure = 0 toKey to insure = 1
+
+            done();
+        };
+
+        r.lpush(fromKey, testValue, function(err, result) {
+            should.exist(result);
+
+            r.rpoplpush( fromKey, toKey, callback );
+        });
+
+    });
+});
+
+
 describe("brpop", function() {
     it("should block until the end of the timeout", function(done) {
 
@@ -639,7 +727,7 @@ describe("brpop", function() {
             r.rpush("foo6", "bim");
             r.rpush("foo7", "bam");
         }, 500);
-    });    
+    });
 */
 });
 
@@ -656,7 +744,7 @@ describe("blpop", function() {
             time.should.equal(true);
 
             done();
-            
+
         });
 
         setTimeout(function() {time = true}, 500);
@@ -782,3 +870,5 @@ describe("blpop", function() {
         }, 1500);
     });
 });
+
+
