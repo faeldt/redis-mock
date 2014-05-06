@@ -203,6 +203,76 @@ describe("expire", function () {
 
 });
 
+describe ("ttl", function () {
+
+    it("should return within expire seconds", function (done) {
+        var r = redismock.createClient("", "", "");
+
+        r.set("test", "test", function (err, result) {
+
+            r.expire("test", 10, function (err, result) {
+
+                result.should.equal(1);
+
+                r.ttl("test", function(err, ttl) {
+                    if (err) {
+                        done(err);
+                    }
+
+                    ttl.should.be.within(0,10);
+
+                    r.del("test");
+
+                    r.end();
+
+                    done();
+                });
+            });
+
+        });
+
+    });
+
+    it("should return -2 for non-existing key", function (done) {
+
+        var r = redismock.createClient("", "", "");
+
+        r.ttl("test", function(err, ttl) {
+            if (err) {
+                done(err);
+            }
+
+            ttl.should.equal(-2);
+
+            r.end();
+
+            done();
+        });
+    });
+
+    it("should return -1 for an existing key with no EXPIRE", function (done) {
+
+        var r = redismock.createClient("", "", "");
+
+        r.set("test", "test", function (err, result) {
+            r.ttl("test", function (err, ttl) {
+                if (err) {
+                    done(err);
+                }
+
+                ttl.should.equal(-1);
+
+                r.del("test");
+
+                r.end();
+
+                done();
+            });
+        });
+    });
+
+});
+
 describe("keys", function () {
 
     var r = redismock.createClient();
