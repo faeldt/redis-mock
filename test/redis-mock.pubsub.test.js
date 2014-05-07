@@ -10,11 +10,11 @@ if (process.env['VALID_TESTS']) {
 describe("publish and subscribe", function () {
 
   var clock
-  beforeEach(function() {
+  beforeEach(function () {
     // speed up tests with fake timers. See http://sinonjs.org/docs/#clock-api
     clock = sinon.useFakeTimers();
   })
-  afterEach(function() {
+  afterEach(function () {
     clock.restore()
   })
 
@@ -45,7 +45,7 @@ describe("publish and subscribe", function () {
     r.subscribe(channelName);
   });
 
-  it("suscribing and publishing with the same connection should make an error", function(done) {
+  it("suscribing and publishing with the same connection should make an error", function (done) {
     var channelName = "testchannel";
     var otherChannel = "otherchannel";
 
@@ -53,10 +53,10 @@ describe("publish and subscribe", function () {
     r.subscribe(channelName);
 
     try {
-      (function(){
+      (function () {
         r.publish(otherChannel, "");
       }).should.throwError();
-    } catch(e) {
+    } catch (e) {
       r.end();
 
       done();
@@ -83,7 +83,7 @@ describe("publish and subscribe", function () {
     });
 
     r2.publish(otherChannel, "");
-    setTimeout(function() {
+    setTimeout(function () {
       r2.publish(channelName, "");
     }, 1000);
     clock.tick(1000)
@@ -129,10 +129,10 @@ describe("publish and subscribe", function () {
       }
     });
     // Ensure the messages has got time to get to the server
-    setTimeout(function() {
+    setTimeout(function () {
       r3.publish(channelName, "");
       r3.publish(channelName, "");
-      setTimeout(function() {
+      setTimeout(function () {
         r3.publish(doneChannel, "");
       }, 500);
     }, 500);

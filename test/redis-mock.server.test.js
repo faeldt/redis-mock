@@ -1,34 +1,34 @@
 var redismock = require("../"),
-    should = require("should");
+  should = require("should");
 
 if (process.env['VALID_TESTS']) {
-    redismock = require('redis'); 
+  redismock = require('redis');
 }
 
 describe("flushdb", function () {
 
-    it("should clean database", function(done) {
+  it("should clean database", function (done) {
 
-        var r = redismock.createClient();
+    var r = redismock.createClient();
 
-        r.set("foo", "bar", function (err, result) {
-            r.flushdb(function (err, result) {
-                result.should.equal("OK");
-                
-                r.exists("foo", function(err, result) {
+    r.set("foo", "bar", function (err, result) {
+      r.flushdb(function (err, result) {
+        result.should.equal("OK");
 
-                    result.should.be.equal(0);
+        r.exists("foo", function (err, result) {
 
-                    r.end();
-                    done();
-                })
+          result.should.be.equal(0);
+
+          r.end();
+          done();
+        })
 
 
-            });
-
-        });
+      });
 
     });
+
+  });
 
 });
 

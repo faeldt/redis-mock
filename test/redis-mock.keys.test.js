@@ -52,7 +52,7 @@ describe("del", function () {
 
 describe("exists", function () {
 
-  it("should return 0 for non-existing keys", function(done) {
+  it("should return 0 for non-existing keys", function (done) {
 
     var r = redismock.createClient("", "", "");
 
@@ -98,11 +98,11 @@ describe("exists", function () {
 describe("expire", function () {
 
   var clock
-  before(function() {
+  before(function () {
     // speed up tests with fake timers. See http://sinonjs.org/docs/#clock-api
     clock = sinon.useFakeTimers();
   })
-  after(function() {
+  after(function () {
     clock.restore()
   })
 
@@ -144,89 +144,102 @@ describe("expire", function () {
   });
 });
 
-describe ("ttl", function () {
+describe("ttl", function () {
 
-    it("should return within expire seconds", function (done) {
-        var r = redismock.createClient("", "", "");
+  var clock, r;
 
-        r.set("test", "test", function (err, result) {
+  before(function () {
+    clock = sinon.useFakeTimers();
+  });
 
-            r.expire("test", 10, function (err, result) {
+  beforeEach(function () {
+    // speed up tests with fake timers. See http://sinonjs.org/docs/#clock-api
+    if (r) {
+      r.end();
+    }
+    r = redismock.createClient("", "", "");
+  });
+  after(function () {
+    clock.restore();
+  });
 
-                result.should.equal(1);
+  it("should return within expire seconds", function (done) {
 
-                r.ttl("test", function(err, ttl) {
-                    if (err) {
-                        done(err);
-                    }
+    r.set("test", "test", function (err, result) {
 
-                    ttl.should.be.within(0,10);
+      r.expire("test", 10, function (err, result) {
 
-                    r.del("test");
+        result.should.equal(1);
 
-                    r.end();
+        clock.tick(500);
+        r.ttl("test", function (err, ttl) {
+          if (err) {
+            done(err);
+          }
 
-                    done();
-                });
-            });
+          ttl.should.equal(5);
 
+          r.del("test");
+
+          r.end();
+
+          done();
         });
+      });
 
     });
 
-    it("should return -2 for non-existing key", function (done) {
+  });
 
-        var r = redismock.createClient("", "", "");
+  it("should return -2 for non-existing key", function (done) {
 
-        r.ttl("test", function(err, ttl) {
-            if (err) {
-                done(err);
-            }
+    r.ttl("test", function (err, ttl) {
+      if (err) {
+        done(err);
+      }
 
-            ttl.should.equal(-2);
+      ttl.should.equal(-2);
 
-            r.end();
+      r.end();
 
-            done();
-        });
+      done();
     });
+  });
 
-    it("should return -1 for an existing key with no EXPIRE", function (done) {
+  it("should return -1 for an existing key with no EXPIRE", function (done) {
 
-        var r = redismock.createClient("", "", "");
+    r.set("test", "test", function (err, result) {
+      r.ttl("test", function (err, ttl) {
+        if (err) {
+          done(err);
+        }
 
-        r.set("test", "test", function (err, result) {
-            r.ttl("test", function (err, ttl) {
-                if (err) {
-                    done(err);
-                }
+        ttl.should.equal(-1);
 
-                ttl.should.equal(-1);
+        r.del("test");
 
-                r.del("test");
+        r.end();
 
-                r.end();
-
-                done();
-            });
-        });
+        done();
+      });
     });
+  });
 
 });
 
 describe("keys", function () {
 
   var r = redismock.createClient();
-  beforeEach(function(done) {
-    r.set("hello", "test", function() {
-      r.set("hallo", "test", function() {
+  beforeEach(function (done) {
+    r.set("hello", "test", function () {
+      r.set("hallo", "test", function () {
         r.set("hxlo", "test", done);
       });
     });
 
   });
 
-  it ("should return all existing keys if pattern equal - *", function (done) {
+  it("should return all existing keys if pattern equal - *", function (done) {
     r.keys('*', function (err, keys) {
       keys.should.have.length(3);
       keys.should.include("hello");
@@ -236,7 +249,7 @@ describe("keys", function () {
     });
   });
 
-  it ("should correct process pattern with '?'", function (done) {
+  it("should correct process pattern with '?'", function (done) {
     r.keys('h?llo', function (err, keys) {
       keys.should.have.length(2);
       keys.should.include("hello");
@@ -245,7 +258,7 @@ describe("keys", function () {
     });
   });
 
-  it ("should correct process pattern with character sets", function (done) {
+  it("should correct process pattern with character sets", function (done) {
     r.keys('h[ae]llo', function (err, keys) {
       keys.should.have.length(2);
       keys.should.include("hello");
@@ -254,7 +267,7 @@ describe("keys", function () {
     });
   });
 
-  it ("should correct process pattern with all special characters", function (done) {
+  it("should correct process pattern with all special characters", function (done) {
     r.keys('?[aex]*o', function (err, keys) {
       keys.should.have.length(3);
       keys.should.include("hello");

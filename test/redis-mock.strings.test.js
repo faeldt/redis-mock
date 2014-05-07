@@ -9,7 +9,7 @@ if (process.env['VALID_TESTS']) {
 
 describe("get", function () {
 
-  it("should return the value of an existing key", function(done) {
+  it("should return the value of an existing key", function (done) {
 
     var r = redismock.createClient("", "", "");
 
@@ -51,25 +51,25 @@ describe("get", function () {
 
 describe("setex", function () {
 
-  var clock, r
+  var clock, r;
 
-  before(function() {
+  before(function () {
     clock = sinon.useFakeTimers();
-  })
+  });
 
-  beforeEach(function() {
+  beforeEach(function () {
     // speed up tests with fake timers. See http://sinonjs.org/docs/#clock-api
     r = redismock.createClient("", "", "");
-  })
-  after(function() {
+  });
+  after(function () {
     clock.restore()
-  })
+  });
 
   it("should set a key", function (done) {
     var key = 'test_persist'
     r.setex(key, 1000, "val", function (err, result) {
       result.should.be.ok;
-      r.get(key, function(err, result) {
+      r.get(key, function (err, result) {
         result.should.equal("val");
         r.end();
         done();
@@ -99,32 +99,32 @@ describe("setex", function () {
 
 });
 
-describe("mget", function() {
+describe("mget", function () {
 
-    it("should fetch multiple values across multiple keys", function (done) {
+  it("should fetch multiple values across multiple keys", function (done) {
 
-        var r = redismock.createClient("", "", "");
+    var r = redismock.createClient("", "", "");
 
-        r.set("multi1", "one", function(err, result) {
+    r.set("multi1", "one", function (err, result) {
 
-            r.set("multi3", "three", function(err, result) {
+      r.set("multi3", "three", function (err, result) {
 
-                r.mget("multi1", "multi2", "multi3", function(err, result) {
-                    result.should.be.ok;
+        r.mget("multi1", "multi2", "multi3", function (err, result) {
+          result.should.be.ok;
 
-                    result[0].should.equal("one");
+          result[0].should.equal("one");
 
-                    should.not.exist(result[1]);
+          should.not.exist(result[1]);
 
-                    result[2].should.equal("three");
+          result[2].should.equal("three");
 
-                    r.end();
-                    done();
-                });
-
-            });
+          r.end();
+          done();
         });
+
+      });
     });
+  });
 });
 
 describe("incr", function () {
