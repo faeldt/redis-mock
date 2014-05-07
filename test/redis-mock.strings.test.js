@@ -99,6 +99,34 @@ describe("setex", function () {
 
 });
 
+describe("mget", function() {
+
+    it("should fetch multiple values across multiple keys", function (done) {
+
+        var r = redismock.createClient("", "", "");
+
+        r.set("multi1", "one", function(err, result) {
+
+            r.set("multi3", "three", function(err, result) {
+
+                r.mget("multi1", "multi2", "multi3", function(err, result) {
+                    result.should.be.ok;
+
+                    result[0].should.equal("one");
+
+                    should.not.exist(result[1]);
+
+                    result[2].should.equal("three");
+
+                    r.end();
+                    done();
+                });
+
+            });
+        });
+    });
+});
+
 describe("incr", function () {
 
   it("should increment the number stored at key", function (done) {
