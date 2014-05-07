@@ -315,8 +315,8 @@ describe("hsetnx", function () {
 describe("multiple get/set", function() {
 
 	var mHash = "mHash";
-    var mHash2 = "mHash2";
-    var mHashEmpty = "mHashEmpty";
+	var mHash2 = "mHash2";
+	var mHashEmpty = "mHashEmpty";
 	var mKey1 = "mKey1";
 	var mKey2 = "mKey2";
 	var mKey3 = "mKey3";
@@ -326,18 +326,18 @@ describe("multiple get/set", function() {
 	var mValue3 = "mValue3";
 	var mValue4 = "mValue4";
 
-    beforeEach(function(done) {
-        var r = redismock.createClient("", "", "");
-        r.hset(mHash2, mKey1, mValue1, function() {
-            r.hset(mHash2, mKey2, mValue2, function() {
-                r.hset(mHash2, mKey3, mValue3, function() {
-                    r.hset(mHash2, mKey4, mValue4, function() {
-                        done();
-                    });
-                });
-            });
+  beforeEach(function(done) {
+    var r = redismock.createClient("", "", "");
+    r.hset(mHash2, mKey1, mValue1, function() {
+      r.hset(mHash2, mKey2, mValue2, function() {
+        r.hset(mHash2, mKey3, mValue3, function() {
+          r.hset(mHash2, mKey4, mValue4, function() {
+            done();
+          });
         });
+      });
     });
+  });
 
 	// HMSET
 	it("should be able to set multiple keys as multiple arguments", function(done) {
@@ -378,7 +378,7 @@ describe("multiple get/set", function() {
     var r = redismock.createClient("", "", "");
 
     r.hmset(mHash, { mKey3: mValue3, mKey4: mValue4});
-    r.hmget(mHash, mKey1, mKey2, function(err, result) {
+    r.hmget(mHash2, mKey1, mKey2, function(err, result) {
 
       result.should.be.an.Array.and.have.lengthOf(2);
       result.should.eql([mValue1, mValue2]);
