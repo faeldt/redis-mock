@@ -1,176 +1,174 @@
-var redismock = require("../"),
-    should = require("should"),
-    events = require("events");
+var redismock = require("../")
+var should = require("should")
+var events = require("events")
+var sinon = require('sinon')
 
 if (process.env['VALID_TESTS']) {
-    redismock = require('redis');
+  redismock = require('redis');
 }
 
 describe("get", function () {
 
-    it("should return the value of an existing key", function(done) {
+  it("should return the value of an existing key", function(done) {
 
-        var r = redismock.createClient("", "", "");
+    var r = redismock.createClient("", "", "");
 
-        r.set("foo", "bar", function (err, result) {
+    r.set("foo", "bar", function (err, result) {
 
-            r.get("foo", function (err, result) {
+      r.get("foo", function (err, result) {
 
-                result.should.equal("bar");
+        result.should.equal("bar");
 
-                r.end();
+        r.end();
 
-                done();
+        done();
 
-            });
-
-        });
+      });
 
     });
 
-    it("should return null for a non-existing key", function (done) {
+  });
 
-        var r = redismock.createClient("", "", "");
+  it("should return null for a non-existing key", function (done) {
+
+    var r = redismock.createClient("", "", "");
 
 
-        r.get("does-not-exist", function (err, result) {
+    r.get("does-not-exist", function (err, result) {
 
-            should.not.exist(result);
+      should.not.exist(result);
 
-            r.end();
+      r.end();
 
-            done();
-
-        });
-
+      done();
 
     });
+
+
+  });
 
 });
 
 describe("setex", function () {
 
-    it("should set a key", function (done) {
+  var clock, r
 
-        var r = redismock.createClient("", "", "");
+  before(function() {
+    clock = sinon.useFakeTimers();
+  })
 
-        r.setex("test", 10000, "val", function (err, result) {
+  beforeEach(function() {
+    // speed up tests with fake timers. See http://sinonjs.org/docs/#clock-api
+    r = redismock.createClient("", "", "");
+  })
+  after(function() {
+    clock.restore()
+  })
 
-            result.should.be.ok;
-
-            r.get("test", function(err, result) {
-                result.should.equal("val");
-
-                r.end();
-                done();
-            });
-
-        });
-
-    });
-
-    it("should set a disappearing key", function (done) {
-
-        var r = redismock.createClient("", "", "");
-
-        r.setex("test", 1, "val", function (err, result) {
-
-            result.should.be.ok;
-
-            setTimeout(function () {
-                console.log("Waiting for expire...");
-            }, 1000);
-
-            setTimeout(function () {
-
-                r.exists("test", function (err, result) {
-
-                    result.should.equal(0);
-
-                    r.end();
-
-                    done();
-
-                });
-
-            }, 2100);
-
-        });
+  it("should set a key", function (done) {
+    var key = 'test_persist'
+    r.setex(key, 1000, "val", function (err, result) {
+      result.should.be.ok;
+      r.get(key, function(err, result) {
+        result.should.equal("val");
+        r.end();
+        done();
+      });
 
     });
+  });
+
+  it("should set a disappearing key", function (done) {
+    var key = 'test_disappearing'
+    r.setex(key, 1, "val", cb)
+
+    function cb(err, result) {
+      result.should.be.ok;
+      clock.tick(1000)
+      setTimeout(function () {
+        r.exists(key, function (err, result) {
+          result.should.equal(0);
+          r.end();
+          done();
+        });
+      }, 2100);
+      clock.tick(3000)
+
+    }
+  });
 
 });
 
 describe("incr", function () {
 
-    it("should increment the number stored at key", function (done) {
+  it("should increment the number stored at key", function (done) {
 
-        var r = redismock.createClient("", "", "");
+    var r = redismock.createClient("", "", "");
 
-        r.set("foo", "10", function (err, result) {
+    r.set("foo", "10", function (err, result) {
 
-            r.incr("foo", function (err, result) {
+      r.incr("foo", function (err, result) {
 
-                result.should.eql(11);
+        result.should.eql(11);
 
-                r.get("foo", function (err, result) {
+        r.get("foo", function (err, result) {
 
-                    result.should.eql("11");
+          result.should.eql("11");
 
-                    r.end();
-                    done();
-                });
-            });
+          r.end();
+          done();
         });
+      });
     });
+  });
 
-    it("should set 0 before performing if the key does not exist", function (done) {
+  it("should set 0 before performing if the key does not exist", function (done) {
 
-        var r = redismock.createClient("", "", "");
+    var r = redismock.createClient("", "", "");
 
-        r.incr("bar", function (err, result) {
+    r.incr("bar", function (err, result) {
 
-            result.should.eql(1);
+      result.should.eql(1);
 
-            r.get("bar", function (err, result) {
+      r.get("bar", function (err, result) {
 
-                result.should.eql("1");
+        result.should.eql("1");
 
-                r.end();
-                done();
-            });
-        });
+        r.end();
+        done();
+      });
     });
+  });
 
-    it("should return error if the key holds the wrong kind of value.", function (done) {
+  it("should return error if the key holds the wrong kind of value.", function (done) {
 
-        var r = redismock.createClient("", "", "");
+    var r = redismock.createClient("", "", "");
 
-        r.hset("foo", "bar", "baz", function (err, result) {
+    r.hset("foo", "bar", "baz", function (err, result) {
 
-            r.incr("foo", function (err, result) {
+      r.incr("foo", function (err, result) {
 
-                err.message.should.eql("ERR Operation against a key holding the wrong kind of value");
+        err.message.should.eql("ERR Operation against a key holding the wrong kind of value");
 
-                r.end();
-                done();
-            });
-        });
+        r.end();
+        done();
+      });
     });
+  });
 
-    it("should return error if the key contains a string that can not be represented as integer.", function (done) {
+  it("should return error if the key contains a string that can not be represented as integer.", function (done) {
 
-        var r = redismock.createClient("", "", "");
+    var r = redismock.createClient("", "", "");
 
-        r.set("baz", "qux", function (err, result) {
+    r.set("baz", "qux", function (err, result) {
 
-            r.incr("baz", function (err, result) {
+      r.incr("baz", function (err, result) {
 
-                err.message.should.equal("ERR value is not an integer or out of range");
+        err.message.should.equal("ERR value is not an integer or out of range");
 
-                r.end();
-                done();
-            });
-        });
+        r.end();
+        done();
+      });
     });
+  });
 });
