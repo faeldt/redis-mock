@@ -1,4 +1,3 @@
-var sinon = require('sinon')
 var redismock = require("../")
 var should = require("should")
 var events = require("events");
@@ -10,7 +9,7 @@ if (process.env['VALID_TESTS']) {
 describe("del", function () {
 
   it("should do nothing with non-existant keys", function (done) {
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
     r.del(["key1", "key2", "key3"], function (err, result) {
       result.should.equal(0);
       r.del("key4", function (err, result) {
@@ -22,7 +21,7 @@ describe("del", function () {
   });
 
   it("should delete existing keys", function (done) {
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
     r.set("test", "test", function (err, result) {
       r.del("test", function (err, result) {
         result.should.equal(1);
@@ -36,7 +35,7 @@ describe("del", function () {
   });
 
   it("should delete multiple keys", function (done) {
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
     r.set("test", "val", function (err, result) {
       r.set("test2", "val2", function (err, result) {
         r.del(["test", "test2", "noexistant"], function (err, result) {
@@ -54,7 +53,7 @@ describe("exists", function () {
 
   it("should return 0 for non-existing keys", function (done) {
 
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
 
     r.exists("test", function (err, result) {
 
@@ -69,7 +68,7 @@ describe("exists", function () {
 
   it("should return 1 for existing keys", function (done) {
 
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
 
     r.set("test", "test", function (err, result) {
 
@@ -91,23 +90,10 @@ describe("exists", function () {
 
 });
 
-//TODO: test that keys persist over rename
-//TODO: test that expire can update
-//TODO: test persist
-//TODO: test that expire clears when setting different value to key
 describe("expire", function () {
 
-  var clock
-  before(function () {
-    // speed up tests with fake timers. See http://sinonjs.org/docs/#clock-api
-    clock = sinon.useFakeTimers();
-  })
-  after(function () {
-    clock.restore()
-  })
-
   it("should return 0 for non-existing key", function (done) {
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
     r.expire("test", 10, function (err, result) {
       result.should.equal(0);
       r.end();
@@ -116,7 +102,7 @@ describe("expire", function () {
   });
 
   it("should return 1 when timeout set on existing key", function (done) {
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
     r.set("test", "test", function (err, result) {
       r.expire("test", 10, function (err, result) {
         result.should.equal(1);
@@ -128,17 +114,17 @@ describe("expire", function () {
   });
 
   it("should make key disappear after the set time", function (done) {
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
     r.set("test", "val", function (err, result) {
       r.expire("test", 1, function (err, result) {
         result.should.equal(1);
-        clock.tick(2000) // tick clock ahead 1000 milliseconds
-        clock.restore()
-        r.exists("test", function (err, result) {
-          result.should.equal(0);
-          r.end();
-          done();
-        });
+        setTimeout(function () {
+          r.exists("test", function (err, result) {
+            result.should.equal(0);
+            r.end();
+            done();
+          });
+        }, 1500);
       });
     });
   });
@@ -146,45 +132,35 @@ describe("expire", function () {
 
 describe("ttl", function () {
 
-  var clock, r;
-
-  before(function () {
-    clock = sinon.useFakeTimers();
-  });
+  var r;
 
   beforeEach(function () {
-    // speed up tests with fake timers. See http://sinonjs.org/docs/#clock-api
-    if (r) {
-      r.end();
-    }
-    r = redismock.createClient("", "", "");
-  });
-  after(function () {
-    clock.restore();
+    r = redismock.createClient();
   });
 
   it("should return within expire seconds", function (done) {
 
     r.set("test", "test", function (err, result) {
 
-      r.expire("test", 10, function (err, result) {
+      r.expire("test", 100, function (err, result) {
 
         result.should.equal(1);
 
-        clock.tick(5000);
-        r.ttl("test", function (err, ttl) {
-          if (err) {
-            done(err);
-          }
+        setTimeout(function () {
+          r.ttl("test", function (err, ttl) {
+            if (err) {
+              done(err);
+            }
 
-          ttl.should.equal(5);
+            ttl.should.be.within(1, 99);
 
-          r.del("test");
+            r.del("test");
 
-          r.end();
+            r.end();
 
-          done();
-        });
+            done();
+          });
+        }, 1500);
       });
 
     });
@@ -243,7 +219,10 @@ describe("keys", function () {
     r.keys('*', function (err, keys) {
       keys.should.be.instanceof(Array);
       keys.should.have.length(3);
-      keys.should.eql([ 'hello', 'hallo', 'hxlo' ]);
+      keys.should.containEql('hello');
+      keys.should.containEql('hallo');
+      keys.should.containEql('hxlo');
+
       done();
     });
   });
@@ -252,7 +231,9 @@ describe("keys", function () {
     r.keys('h?llo', function (err, keys) {
       keys.should.be.instanceof(Array);
       keys.should.have.length(2);
-      keys.should.eql([ 'hello', 'hallo']);
+      keys.should.containEql('hello');
+      keys.should.containEql('hallo');
+      
       done();
     });
   });
@@ -261,7 +242,9 @@ describe("keys", function () {
     r.keys('h[ae]llo', function (err, keys) {
       keys.should.be.instanceof(Array);
       keys.should.have.length(2);
-      keys.should.eql([ 'hello', 'hallo']);
+      keys.should.containEql('hello');
+      keys.should.containEql('hallo');
+
       done();
     });
   });
@@ -270,7 +253,10 @@ describe("keys", function () {
     r.keys('?[aex]*o', function (err, keys) {
       keys.should.be.instanceof(Array);
       keys.should.have.length(3);
-      keys.should.eql([ 'hello', 'hallo', 'hxlo' ]);
+      keys.should.containEql('hello');
+      keys.should.containEql('hallo');
+      keys.should.containEql('hxlo');
+      
       done();
     });
   });

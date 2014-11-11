@@ -1,7 +1,6 @@
-﻿var redismock = require("../")
-var should = require("should")
+﻿var redismock = require("../");
+var should = require("should");
 var events = require("events");
-var sinon = require('sinon')
 
 if (process.env['VALID_TESTS']) {
   redismock = require('redis');
@@ -9,18 +8,9 @@ if (process.env['VALID_TESTS']) {
 
 describe("publish and subscribe", function () {
 
-  var clock
-  beforeEach(function () {
-    // speed up tests with fake timers. See http://sinonjs.org/docs/#clock-api
-    clock = sinon.useFakeTimers();
-  })
-  afterEach(function () {
-    clock.restore()
-  })
-
   it("should subscribe and unsubscribe to a channel", function (done) {
 
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
 
     should.exist(r.subscribe);
     should.exist(r.unsubscribe);
@@ -49,7 +39,7 @@ describe("publish and subscribe", function () {
     var channelName = "testchannel";
     var otherChannel = "otherchannel";
 
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
     r.subscribe(channelName);
 
     try {
@@ -68,8 +58,8 @@ describe("publish and subscribe", function () {
     var channelName = "testchannel";
     var otherChannel = "otherchannel";
 
-    var r = redismock.createClient("", "", "");
-    var r2 = redismock.createClient("", "", "");
+    var r = redismock.createClient();
+    var r2 = redismock.createClient();
     r.subscribe(channelName);
 
     r.on('message', function (ch, msg) {
@@ -86,7 +76,6 @@ describe("publish and subscribe", function () {
     setTimeout(function () {
       r2.publish(channelName, "");
     }, 1000);
-    clock.tick(1000)
   });
 
   it("should support multiple subscribers", function (done) {
@@ -94,9 +83,9 @@ describe("publish and subscribe", function () {
     var channelName = "testchannel";
     var doneChannel = "donechannel";
 
-    var r = redismock.createClient("", "", "");
-    var r2 = redismock.createClient("", "", "");
-    var r3 = redismock.createClient("", "", "");
+    var r = redismock.createClient();
+    var r2 = redismock.createClient();
+    var r3 = redismock.createClient();
 
     r.subscribe(channelName);
     r2.subscribe(channelName);
@@ -136,8 +125,6 @@ describe("publish and subscribe", function () {
         r3.publish(doneChannel, "");
       }, 500);
     }, 500);
-
-    clock.tick(1000)
   });
 
 });

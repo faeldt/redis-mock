@@ -9,7 +9,7 @@ if (process.env['VALID_TESTS']) {
 
 // Clean the db after each test
 afterEach(function (done) {
-  r = redismock.createClient("", "", "");
+  r = redismock.createClient();
   r.flushdb(function () {
     r.end();
     done();
@@ -22,7 +22,7 @@ describe("redis-mock", function () {
 
     should.exist(redismock.createClient);
 
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
     should.exist(r);
     r.should.be.an.instanceof(redismock.RedisClient);
     r.should.be.an.instanceof(events.EventEmitter);
@@ -33,7 +33,7 @@ describe("redis-mock", function () {
 
   it("should emit ready and connected when creating client", function (done) {
 
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
 
     var didEmitOther = true;
     var didOtherPassed = false
@@ -69,7 +69,7 @@ describe("redis-mock", function () {
   /** This test doesn't seem to work on node_redis
    it("should have function end() that emits event 'end'", function (done) {
 
-        var r = redismock.createClient("", "", "");
+        var r = redismock.createClient();
 
         r.on("end", function () {
 

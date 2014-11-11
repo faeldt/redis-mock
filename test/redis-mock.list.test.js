@@ -14,7 +14,7 @@ describe("basic pushing/poping list", function () {
   var testValue = 10;
 
   it("should not get any value from the end", function (done) {
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
     r.rpop(testKey, function (err, result) {
       should.not.exist(result);
       r.end();
@@ -23,7 +23,7 @@ describe("basic pushing/poping list", function () {
   });
 
   it("should not get any value from the start", function (done) {
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
     r.lpop(testKey, function (err, result) {
       should.not.exist(result);
       r.end();
@@ -32,7 +32,7 @@ describe("basic pushing/poping list", function () {
   });
 
   it("should push and pop the same element on the end", function (done) {
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
     r.rpush(testKey, testValue, function (err, result) {
       result.should.equal(1);
       r.rpop(testKey, function (err, result) {
@@ -44,7 +44,7 @@ describe("basic pushing/poping list", function () {
   });
 
   it("should push and pop the same element on the start", function (done) {
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
     r.lpush(testKey, testValue, function (err, result) {
       result.should.equal(1);
       r.lpop(testKey, function (err, result) {
@@ -56,7 +56,7 @@ describe("basic pushing/poping list", function () {
   });
 
   it("should be a queue", function (done) {
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
     r.lpush(testKey, testValue, function (err, result) {
       result.should.equal(1);
       r.lpush(testKey, testValue + 1, function (err, result) {
@@ -71,7 +71,7 @@ describe("basic pushing/poping list", function () {
   });
 
   it("should add a few elements", function (done) {
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
     var cb = function (err, result) {
       result.should.equal(testValues.length);
       r.lpop(testKey2, function (err, result) {
@@ -93,7 +93,7 @@ describe("llen", function () {
   var testValue = 10;
   it("should return 0", function (done) {
 
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
 
     r.llen(testKey, function (err, result) {
       result.should.equal(0);
@@ -103,7 +103,7 @@ describe("llen", function () {
   });
 
   it("should return 5 and evolve", function (done) {
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
     var cb = function (err, res) {
       r.llen(testKey, function (err, result) {
         result.should.equal(testValues.length);
@@ -129,7 +129,7 @@ describe("lindex", function () {
 
   it("getting index of non exisiting list", function (done) {
 
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
 
     r.lindex(keyUndefined, 0, function (err, result) {
 
@@ -148,7 +148,7 @@ describe("lindex", function () {
 
   it("getting positive indexes of exisiting list", function (done) {
 
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
 
     var cb = function (err, result) {
 
@@ -176,7 +176,7 @@ describe("lindex", function () {
 
   it("getting negative indexes of exisiting list", function (done) {
 
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
 
     var cb = function (err, result) {
 
@@ -215,7 +215,7 @@ describe("lset", function () {
 
   it("changing value of non exisiting list", function (done) {
 
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
 
     r.lset(keyUndefined, 0, 1, function (err, result) {
       err.message.should.equal("ERR no such key");
@@ -229,7 +229,7 @@ describe("lset", function () {
 
   it("setting impossible indexes", function (done) {
 
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
 
     var cb = function (err, result) {
 
@@ -254,7 +254,7 @@ describe("lset", function () {
 
   it("changing value positive indexes from start index 0", function (done) {
 
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
 
     var cb = function (err, result) {
 
@@ -277,7 +277,7 @@ describe("lset", function () {
 
   it("changing value positive indexes from start index length-1", function (done) {
 
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
 
     var cb = function (err, result) {
 
@@ -300,7 +300,7 @@ describe("lset", function () {
 
   it("changing value negative indexes of exisiting list index -1", function (done) {
 
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
 
     var cb = function (err, result) {
 
@@ -323,7 +323,7 @@ describe("lset", function () {
 
   it("changing value negative indexes of exisiting list index -length", function (done) {
 
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
 
     var cb = function (err, result) {
 
@@ -351,7 +351,7 @@ describe("rpushx", function (argument) {
 
   it("tries to push on empty list", function (done) {
 
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
 
     r.rpushx(testKey, 3, function (err, result) {
 
@@ -370,7 +370,7 @@ describe("rpushx", function (argument) {
 
   it("tries to push on non empty list", function (done) {
 
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
 
     r.rpush(testKey, 3, function (err, result) {
 
@@ -396,7 +396,7 @@ describe("lpushx", function (argument) {
 
   it("tries to push on empty list", function (done) {
 
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
 
     r.lpushx(testKey, 3, function (err, result) {
 
@@ -415,7 +415,7 @@ describe("lpushx", function (argument) {
 
   it("tries to push on non empty list", function (done) {
 
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
 
     r.rpush(testKey, 3, function (err, result) {
 
@@ -448,7 +448,7 @@ describe("brpop", function () {
   })
 
   it("should block until the end of the timeout", function (done) {
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
     var time = false;
     r.brpop("foo", 1, function (err, result) {
       should.not.exist(result);
@@ -463,7 +463,7 @@ describe("brpop", function () {
   });
 
   it("should block until the end of the timeout even with multiple lists", function (done) {
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
     var time = false;
 
     r.brpop("foo", "ffo", 1, function (err, result) {
@@ -480,7 +480,7 @@ describe("brpop", function () {
   });
 
   it("should block with empty list", function (done) {
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
     r.rpush("foo2", "bar", function (err, result) {
 
       r.rpop("foo2", function (err, result) {
@@ -503,8 +503,8 @@ describe("brpop", function () {
   });
 
   it("should unblock when an element is added", function (done) {
-    var r = redismock.createClient("", "", "");
-    var r2 = redismock.createClient("", "", "");
+    var r = redismock.createClient();
+    var r2 = redismock.createClient();
     var time = false;
 
     r.brpop("foo3", 5, function (err, result) {
@@ -525,8 +525,8 @@ describe("brpop", function () {
   });
 
   it("should unblock when an element is added to any list", function (done) {
-    var r = redismock.createClient("", "", "");
-    var r2 = redismock.createClient("", "", "");
+    var r = redismock.createClient();
+    var r2 = redismock.createClient();
     var time = false;
     r.brpop("foo3", "foo4", 2, function (err, result) {
 
@@ -547,8 +547,8 @@ describe("brpop", function () {
   });
 
   it("push with multiple elements should be consired as one", function (done) {
-    var r = redismock.createClient("", "", "");
-    var r2 = redismock.createClient("", "", "");
+    var r = redismock.createClient();
+    var r2 = redismock.createClient();
     var time = false;
     r.brpop("foo5", 2, function (err, result) {
       result[0].should.equal("foo5");
@@ -568,8 +568,8 @@ describe("brpop", function () {
   });
 
   it("should once it's unblocked it shouldn't be called again", function (done) {
-    var r = redismock.createClient("", "", "");
-    var r2 = redismock.createClient("", "", "");
+    var r = redismock.createClient();
+    var r2 = redismock.createClient();
     var called = 0;
     r.brpop("foo6", "foo7", 2, function (err, result) {
       called += 1;
@@ -590,7 +590,7 @@ describe("brpop", function () {
 
   /** This test needs for the connection to be able to be blocked
    it("should not work if we push with the connection which is blocked", function(done) {
-  var r = redismock.createClient("", "", "");
+  var r = redismock.createClient();
   console.log("Waiting for pop...");
   r.brpop("foo6", "foo7", 1, function(err, result) {
 
@@ -620,7 +620,7 @@ describe("blpop", function () {
   })
 
   it("should block until the end of the timeout", function (done) {
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
     var time = false;
 
     r.blpop("foo8", 1, function (err, result) {
@@ -638,7 +638,7 @@ describe("blpop", function () {
   });
 
   it("should block until the end of the timeout even with multiple lists", function (done) {
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
     var time = false;
     r.blpop("foo9", "ffo9", 1, function (err, result) {
       should.not.exist(result);
@@ -653,7 +653,7 @@ describe("blpop", function () {
   });
 
   it("should block with empty list too", function (done) {
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
     r.rpush("foo10", "bar", function (err, result) {
       r.rpop("foo10", function (err, result) {
         var time = false;
@@ -672,8 +672,8 @@ describe("blpop", function () {
   });
 
   it("should unblock when an element is added", function (done) {
-    var r = redismock.createClient("", "", "");
-    var r2 = redismock.createClient("", "", "");
+    var r = redismock.createClient();
+    var r2 = redismock.createClient();
     var time = false;
 
     r.blpop("foo11", 1, function (err, result) {
@@ -694,8 +694,8 @@ describe("blpop", function () {
   });
 
   it("should unblock when an element is added to any list", function (done) {
-    var r = redismock.createClient("", "", "");
-    var r2 = redismock.createClient("", "", "");
+    var r = redismock.createClient();
+    var r2 = redismock.createClient();
     var time = false;
 
     r.blpop("foo12", "foo13", 1, function (err, result) {
@@ -715,8 +715,8 @@ describe("blpop", function () {
   });
 
   it("push with multiple elements should be considered as one", function (done) {
-    var r = redismock.createClient("", "", "");
-    var r2 = redismock.createClient("", "", "");
+    var r = redismock.createClient();
+    var r2 = redismock.createClient();
     var time = false;
 
     r.blpop("foo14", 1, function (err, result) {
@@ -737,8 +737,8 @@ describe("blpop", function () {
   });
 
   it("should once it's unblocked it shouldn't be called again", function (done) {
-    var r = redismock.createClient("", "", "");
-    var r2 = redismock.createClient("", "", "");
+    var r = redismock.createClient();
+    var r2 = redismock.createClient();
     var called = 0;
     r.blpop("foo15", "foo16", 1, function (err, result) {
       called += 1;
