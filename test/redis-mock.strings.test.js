@@ -61,6 +61,7 @@ describe("setex", function () {
     // speed up tests with fake timers. See http://sinonjs.org/docs/#clock-api
     r = redismock.createClient("", "", "");
   });
+
   after(function () {
     clock.restore()
   });
@@ -74,7 +75,6 @@ describe("setex", function () {
         r.end();
         done();
       });
-
     });
   });
 
@@ -84,7 +84,9 @@ describe("setex", function () {
 
     function cb(err, result) {
       result.should.be.ok;
-      clock.tick(1000)
+      
+      clock.tick(1000);
+
       setTimeout(function () {
         r.exists(key, function (err, result) {
           result.should.equal(0);
@@ -92,11 +94,49 @@ describe("setex", function () {
           done();
         });
       }, 2100);
-      clock.tick(3000)
 
+      clock.tick(3000);
     }
   });
 
+});
+
+describe("setnx", function () {
+
+  it("should set a key", function (done) {
+
+    var r = redismock.createClient("", "", "");
+
+    r.setnx("foo", "10", function (err, result) {
+        result.should.eql(1);
+
+      r.get("foo", function (err, result) {
+        result.should.eql("10");
+        r.end();
+        done();
+      });
+    });
+  });
+
+  it("should not re-set a key", function (done) {
+
+    var r = redismock.createClient("", "", "");
+
+    r.set("foo", "val", function (err, result) {
+
+      r.setnx("foo", "otherVal", function (err, result) {
+
+        result.should.eql(0);
+
+        r.get("foo", function(err, result) {
+            result.should.equal("val");
+
+            r.end();
+            done();
+        });
+      });
+    });
+  });
 });
 
 describe("mget", function () {
@@ -193,6 +233,80 @@ describe("incr", function () {
       r.incr("baz", function (err, result) {
 
         err.message.should.equal("ERR value is not an integer or out of range");
+
+        r.end();
+        done();
+      });
+    });
+  });
+});
+
+describe("incrbyfloat", function () {
+
+  it("should increment the number stored at key by a float value", function (done) {
+
+    var r = redismock.createClient("", "", "");
+
+    r.set("foo", "1.5", function (err, result) {
+
+      r.incrbyfloat("foo", "0.5", function (err, result) {
+
+        result.should.eql(2);
+
+        r.get("foo", function (err, result) {
+
+          result.should.eql("2");
+
+          r.end();
+          done();
+        });
+      });
+    });
+  });
+
+  it("should set 0 before performing if the key does not exist", function (done) {
+
+    var r = redismock.createClient("", "", "");
+
+    r.incrbyfloat("bar", "1.5", function (err, result) {
+
+      result.should.eql(1.5);
+
+      r.get("bar", function (err, result) {
+
+        result.should.eql("1.5");
+
+        r.end();
+        done();
+      });
+    });
+  });
+
+  it("should return error if the key holds the wrong kind of value.", function (done) {
+
+    var r = redismock.createClient("", "", "");
+
+    r.hset("foo", "bar", "baz", function (err, result) {
+
+      r.incrbyfloat("foo", "1.5", function (err, result) {
+
+        err.message.should.eql("ERR Operation against a key holding the wrong kind of value");
+
+        r.end();
+        done();
+      });
+    });
+  });
+
+  it("should return error if the key contains a string that can not be represented as float.", function (done) {
+
+    var r = redismock.createClient("", "", "");
+
+    r.set("baz", "qux", function (err, result) {
+
+      r.incrbyfloat("baz", "1.5",function (err, result) {
+
+        err.message.should.equal("ERR value is not an float or out of range");
 
         r.end();
         done();

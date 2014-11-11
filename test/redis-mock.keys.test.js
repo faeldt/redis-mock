@@ -1,4 +1,4 @@
-﻿var sinon = require('sinon')
+var sinon = require('sinon')
 var redismock = require("../")
 var should = require("should")
 var events = require("events");
@@ -171,7 +171,7 @@ describe("ttl", function () {
 
         result.should.equal(1);
 
-        clock.tick(500);
+        clock.tick(5000);
         r.ttl("test", function (err, ttl) {
           if (err) {
             done(err);
@@ -241,38 +241,36 @@ describe("keys", function () {
 
   it("should return all existing keys if pattern equal - *", function (done) {
     r.keys('*', function (err, keys) {
+      keys.should.be.instanceof(Array);
       keys.should.have.length(3);
-      keys.should.include("hello");
-      keys.should.include("hallo");
-      keys.should.include("hxlo");
+      keys.should.eql([ 'hello', 'hallo', 'hxlo' ]);
       done();
     });
   });
 
   it("should correct process pattern with '?'", function (done) {
     r.keys('h?llo', function (err, keys) {
+      keys.should.be.instanceof(Array);
       keys.should.have.length(2);
-      keys.should.include("hello");
-      keys.should.include("hallo");
+      keys.should.eql([ 'hello', 'hallo']);
       done();
     });
   });
 
   it("should correct process pattern with character sets", function (done) {
     r.keys('h[ae]llo', function (err, keys) {
+      keys.should.be.instanceof(Array);
       keys.should.have.length(2);
-      keys.should.include("hello");
-      keys.should.include("hallo");
+      keys.should.eql([ 'hello', 'hallo']);
       done();
     });
   });
 
   it("should correct process pattern with all special characters", function (done) {
     r.keys('?[aex]*o', function (err, keys) {
+      keys.should.be.instanceof(Array);
       keys.should.have.length(3);
-      keys.should.include("hello");
-      keys.should.include("hallo");
-      keys.should.include("hxlo");
+      keys.should.eql([ 'hello', 'hallo', 'hxlo' ]);
       done();
     });
   });

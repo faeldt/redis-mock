@@ -19,7 +19,7 @@ describe("basic hashing usage", function () {
     var r = redismock.createClient("", "", "");
 
     r.hexists(testHash, testKey, function (err, result) {
-
+      
       result.should.equal(0);
 
       r.end();

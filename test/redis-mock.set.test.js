@@ -27,11 +27,10 @@ describe('sadd', function () {
       result.should.eql(3);
 
       r.smembers('foo', function (err, result) {
-        result.should.include('bar');
-        result.should.include('baz');
-        result.should.include('qux');
+        result.should.be.instanceof(Array);
         result.should.have.length(3);
-
+        result.should.eql([ 'bar', 'baz', 'qux']);
+        
         r.end();
         done();
       });
@@ -47,9 +46,9 @@ describe('sadd', function () {
         result.should.eql(0);
 
         r.smembers('foo', function (err, result) {
-          result.should.include('bar');
-          result.should.include('baz');
+          result.should.be.instanceof(Array);
           result.should.have.length(2);
+          result.should.eql([ 'bar', 'baz']);
 
           r.end();
           done();
@@ -76,10 +75,10 @@ describe('sadd', function () {
     var r = redismock.createClient('', '', '');
     r.sadd('foo', 'bar', 'baz');
     r.smembers('foo', function (err, result) {
-      result.should.include('bar');
-      result.should.include('baz');
+      result.should.be.instanceof(Array);
       result.should.have.length(2);
-
+      result.should.eql([ 'bar', 'baz']);
+      
       r.end();
       done();
     });
@@ -97,10 +96,9 @@ describe('srem', function () {
         result.should.eql(1);
 
         r.smembers('foo', function (err, result) {
-          result.should.not.include('bar');
-          result.should.include('baz');
-          result.should.include('qux');
+          result.should.be.instanceof(Array);
           result.should.have.length(2);
+          result.should.eql([ 'baz', 'qux']);
 
           r.end();
           done();
@@ -117,10 +115,9 @@ describe('srem', function () {
         result.should.eql(2);
 
         r.smembers('foo', function (err, result) {
-          result.should.not.include('bar');
-          result.should.not.include('baz');
-          result.should.include('qux');
+          result.should.be.instanceof(Array);
           result.should.have.length(1);
+          result.should.eql([ 'qux']);
 
           r.end();
           done();
@@ -178,8 +175,7 @@ describe('srem', function () {
     r.sadd('foo', 'bar', 'baz', function (err, result) {
       r.srem('foo', 'bar', 'baz');
       r.smembers('foo', function (err, result) {
-        result.should.not.include('bar');
-        result.should.not.include('baz');
+        result.should.be.instanceof(Array);
         result.should.have.length(0);
 
         r.end();
