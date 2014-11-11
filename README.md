@@ -45,11 +45,15 @@ redis-mock is a WIP, why most commands are not yet available. Currently implemen
 * exists
 * expire
 * ttl
+* incr 
+* incrbyfloat
 
 ## Strings
-* get
+* get 
 * set
 * mget
+* setex 
+* setnx
 
 ## Hashing
 * hset
