@@ -13,8 +13,7 @@
     "mocha": "2.0.x",
     "redis": "0.12.1",
     "jshint": "2.5.x",
-    "jshint-full-path": "1.1.x",
-    "sinon": "~1.7.3"
+    "jshint-full-path": "1.1.x"
   },
   "scripts": {
     "test": "make test",
