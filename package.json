@@ -1,12 +1,12 @@
 {
   "name": "redis-mock",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "Redis client mock object for unit testing",
   "author": "Kristian Faeldt <kristian.faeldt@gmail.com>",
   "main": "./lib/redis-mock",
   "repository": {
     "type": "git",
-    "url": "https://github.com/faeldt/redis-mock.git"
+    "url": "https://github.com/yeahoffline/redis-mock"
   },
   "devDependencies": {
     "should": "4.3.x",
