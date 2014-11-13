@@ -1,7 +1,6 @@
 var redismock = require("../")
 var should = require("should")
 var events = require("events");
-var sinon = require('sinon')
 
 if (process.env['VALID_TESTS']) {
   redismock = require('redis');
@@ -438,15 +437,6 @@ describe("lpushx", function (argument) {
 
 describe("brpop", function () {
 
-  var clock
-  beforeEach(function () {
-    // speed up tests with fake timers. See http://sinonjs.org/docs/#clock-api
-    clock = sinon.useFakeTimers();
-  })
-  afterEach(function () {
-    clock.restore()
-  })
-
   it("should block until the end of the timeout", function (done) {
     var r = redismock.createClient();
     var time = false;
@@ -457,9 +447,9 @@ describe("brpop", function () {
     });
 
     setTimeout(function () {
-      time = true
+      time = true;
     }, 500);
-    clock.tick(1000)
+
   });
 
   it("should block until the end of the timeout even with multiple lists", function (done) {
@@ -467,16 +457,15 @@ describe("brpop", function () {
     var time = false;
 
     r.brpop("foo", "ffo", 1, function (err, result) {
-
       should.not.exist(result);
       time.should.equal(true);
       done();
     });
 
     setTimeout(function () {
-      time = true
+      time = true;
     }, 500);
-    clock.tick(1000)
+
   });
 
   it("should block with empty list", function (done) {
@@ -497,7 +486,6 @@ describe("brpop", function () {
         setTimeout(function () {
           time = true
         }, 500);
-        clock.tick(1000)
       });
     });
   });
@@ -521,7 +509,6 @@ describe("brpop", function () {
     setTimeout(function () {
       r2.rpush("foo3", "bar");
     }, 1500);
-    clock.tick(2000)
   });
 
   it("should unblock when an element is added to any list", function (done) {
@@ -543,7 +530,6 @@ describe("brpop", function () {
     setTimeout(function () {
       r2.rpush("foo4", "bim");
     }, 1000);
-    clock.tick(2000)
   });
 
   it("push with multiple elements should be consired as one", function (done) {
@@ -564,7 +550,6 @@ describe("brpop", function () {
     setTimeout(function () {
       r2.rpush("foo5", "bim", "bam");
     }, 1000);
-    clock.tick(2000)
   });
 
   it("should once it's unblocked it shouldn't be called again", function (done) {
@@ -573,15 +558,13 @@ describe("brpop", function () {
     var called = 0;
     r.brpop("foo6", "foo7", 2, function (err, result) {
       called += 1;
-      clock.tick(1000)
     });
 
     setTimeout(function () {
       r2.rpush("foo6", "bim");
       r2.rpush("foo7", "bam");
-    }, 1000);
+    }, 500);
 
-    clock.tick(1000)
     setTimeout(function () {
       called.should.equal(1);
       done();
@@ -610,15 +593,6 @@ describe("brpop", function () {
 
 describe("blpop", function () {
 
-  var clock
-  beforeEach(function () {
-    // speed up tests with fake timers. See http://sinonjs.org/docs/#clock-api
-    clock = sinon.useFakeTimers();
-  })
-  afterEach(function () {
-    clock.restore()
-  })
-
   it("should block until the end of the timeout", function (done) {
     var r = redismock.createClient();
     var time = false;
@@ -634,7 +608,7 @@ describe("blpop", function () {
     setTimeout(function () {
       time = true
     }, 500);
-    clock.tick(1000)
+
   });
 
   it("should block until the end of the timeout even with multiple lists", function (done) {
@@ -649,7 +623,6 @@ describe("blpop", function () {
     setTimeout(function () {
       time = true
     }, 500);
-    clock.tick(1000)
   });
 
   it("should block with empty list too", function (done) {
@@ -666,7 +639,6 @@ describe("blpop", function () {
         setTimeout(function () {
           time = true
         }, 500);
-        clock.tick(1000)
       });
     });
   });
@@ -690,7 +662,6 @@ describe("blpop", function () {
     setTimeout(function () {
       r2.rpush("foo11", "bar");
     }, 500);
-    clock.tick(500)
   });
 
   it("should unblock when an element is added to any list", function (done) {
@@ -711,7 +682,6 @@ describe("blpop", function () {
     setTimeout(function () {
       r2.rpush("foo12", "bim");
     }, 500);
-    clock.tick(500)
   });
 
   it("push with multiple elements should be considered as one", function (done) {
@@ -733,7 +703,7 @@ describe("blpop", function () {
     setTimeout(function () {
       r2.lpush("foo14", "bim", "bam");
     }, 500);
-    clock.tick(500)
+
   });
 
   it("should once it's unblocked it shouldn't be called again", function (done) {
@@ -742,7 +712,6 @@ describe("blpop", function () {
     var called = 0;
     r.blpop("foo15", "foo16", 1, function (err, result) {
       called += 1;
-      clock.tick(1000)
     });
 
     setTimeout(function () {
@@ -754,6 +723,5 @@ describe("blpop", function () {
       called.should.equal(1);
       done();
     }, 1500);
-    clock.tick(500)
   });
 });
