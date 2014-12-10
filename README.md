@@ -4,9 +4,13 @@ The goal of the redis-mock project is to create a feature-complete mock of https
 
 All operations are performed in-memory, why no Redis installation is required.
 
-Install with:
+# Installation
 
-	npm install redis-mock
+~~~
+	npm install redis-mock --save-dev
+~~~
+
+
 
 ## Usage
 
@@ -94,7 +98,12 @@ You can therefore run the tests using `redis` instead of `redis-mock`. To do so:
 	make check-tests
 ```
 
-> You will need to have a running instance of redis on you machine and our tests use `flushdb a lot so make sure you don't have anything important on it.
+
+You will need to have a running instance of redis on you machine and our tests use `flushdb a lot so make sure you don't have anything important on it.
+
+
+
+
 
 ## LICENSE - "MIT License"
 
