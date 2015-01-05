@@ -171,7 +171,7 @@ describe("ttl", function () {
 
         result.should.equal(1);
 
-        clock.tick(500);
+        clock.tick(5000);
         r.ttl("test", function (err, ttl) {
           if (err) {
             done(err);
