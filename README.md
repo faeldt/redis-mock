@@ -15,6 +15,19 @@ var redis = require("redis-mock"),
     client = redis.createClient();
 ```
 
+If you want to test your app under failing conditions, you can instead instantiate RedisErrorMock
+
+```js
+var RedisErrorMock = require("redis-mock").RedisErrorMock;
+var redis = new RedisErrorMock();
+
+var client = redis.createClient(); // Emits "error"
+
+client.on("error", function(err) {
+  // Fail gracefully
+});
+```
+
 # API
 
 redis-mock is a WIP, why most commands are not yet available. Currently implemented are the following:
