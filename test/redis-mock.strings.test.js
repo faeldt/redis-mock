@@ -200,3 +200,46 @@ describe("incr", function () {
     });
   });
 });
+
+describe("setnx", function () {
+
+    it("should set a key", function (done) {
+
+        var r = redismock.createClient("", "", "");
+
+        r.setnx("foo", "10", function (err, result) {
+            result.should.eql(1);
+
+            r.get("foo", function (err, result) {
+
+                result.should.eql("10");
+
+                r.end();
+                done();
+            });
+        });
+    });
+
+    it("should not re-set a key", function (done) {
+
+        var r = redismock.createClient("", "", "");
+
+        r.set("foo", "val", function (err, result) {
+
+            r.setnx("foo", "otherVal", function (err, result) {
+
+                result.should.eql(0);
+
+                r.get("foo", function(err, result) {
+                    result.should.equal("val");
+
+                    r.end();
+                    done();
+                });
+
+            });
+
+        });
+
+    });
+});
