@@ -1,10 +1,11 @@
 var redismock = require("../")
 var should = require("should")
 var events = require("events");
-var sinon = require('sinon')
+var sinon = require('./timer-helper')
 
 if (process.env['VALID_TESTS']) {
   redismock = require('redis');
+  
 }
 
 describe("basic pushing/poping list", function () {
@@ -579,9 +580,9 @@ describe("brpop", function () {
     setTimeout(function () {
       r2.rpush("foo6", "bim");
       r2.rpush("foo7", "bam");
-    }, 1000);
+    }, 500);
 
-    clock.tick(1000)
+    clock.tick(500)
     setTimeout(function () {
       called.should.equal(1);
       done();

@@ -1,7 +1,7 @@
 var redismock = require("../")
 var should = require("should")
 var events = require("events")
-var sinon = require('sinon')
+var sinon = require('./timer-helper')
 
 if (process.env['VALID_TESTS']) {
   redismock = require('redis');
@@ -84,15 +84,14 @@ describe("setex", function () {
 
     function cb(err, result) {
       result.should.be.ok;
-      clock.tick(1000)
       setTimeout(function () {
         r.exists(key, function (err, result) {
           result.should.equal(0);
           r.end();
           done();
         });
-      }, 2100);
-      clock.tick(3000)
+      }, 1000);
+      clock.tick(1000)
 
     }
   });

@@ -1,4 +1,4 @@
-﻿var sinon = require('sinon')
+﻿var sinon = require('./timer-helper')
 var redismock = require("../")
 var should = require("should")
 var events = require("events");
@@ -131,14 +131,15 @@ describe("expire", function () {
     var r = redismock.createClient();
     r.set("test", "val", function (err, result) {
       r.expire("test", 1, function (err, result) {
-        result.should.equal(1);
-        clock.tick(2000) // tick clock ahead 1000 milliseconds
-        clock.restore()
-        r.exists("test", function (err, result) {
-          result.should.equal(0);
-          r.end();
-          done();
-        });
+        result.should.equal(1);       
+		setTimeout(function () {
+			r.exists("test", function (err, result) {
+			  result.should.equal(0);
+			  r.end();
+			  done();
+			});
+		}, 1000);
+		clock.tick(1000);
       });
     });
   });
@@ -167,24 +168,26 @@ describe("ttl", function () {
 
     r.set("test", "test", function (err, result) {
 
-      r.expire("test", 10, function (err, result) {
+      r.expire("test", 5, function (err, result) {
 
         result.should.equal(1);
 
-        clock.tick(5000);
-        r.ttl("test", function (err, ttl) {
-          if (err) {
-            done(err);
-          }
+        setTimeout(function () {
+			r.ttl("test", function (err, ttl) {
+			  if (err) {
+				done(err);
+			  }
 
-          ttl.should.equal(5);
+			  ttl.should.be.below(5);
 
-          r.del("test");
+			  r.del("test");
 
-          r.end();
+			  r.end();
 
-          done();
-        });
+			  done();
+			});
+		}, 1000);
+		clock.tick(1000);
       });
 
     });
