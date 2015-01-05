@@ -1,7 +1,7 @@
 ﻿var redismock = require("../")
 var should = require("should")
 var events = require("events");
-var sinon = require('sinon')
+var sinon = require('./timer-helper')
 
 if (process.env['VALID_TESTS']) {
   redismock = require('redis');
