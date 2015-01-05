@@ -10,7 +10,7 @@ if (process.env['VALID_TESTS']) {
 describe("del", function () {
 
   it("should do nothing with non-existant keys", function (done) {
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
     r.del(["key1", "key2", "key3"], function (err, result) {
       result.should.equal(0);
       r.del("key4", function (err, result) {
@@ -22,7 +22,7 @@ describe("del", function () {
   });
 
   it("should delete existing keys", function (done) {
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
     r.set("test", "test", function (err, result) {
       r.del("test", function (err, result) {
         result.should.equal(1);
@@ -36,7 +36,7 @@ describe("del", function () {
   });
 
   it("should delete multiple keys", function (done) {
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
     r.set("test", "val", function (err, result) {
       r.set("test2", "val2", function (err, result) {
         r.del(["test", "test2", "noexistant"], function (err, result) {
@@ -54,7 +54,7 @@ describe("exists", function () {
 
   it("should return 0 for non-existing keys", function (done) {
 
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
 
     r.exists("test", function (err, result) {
 
@@ -69,7 +69,7 @@ describe("exists", function () {
 
   it("should return 1 for existing keys", function (done) {
 
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
 
     r.set("test", "test", function (err, result) {
 
@@ -107,7 +107,7 @@ describe("expire", function () {
   })
 
   it("should return 0 for non-existing key", function (done) {
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
     r.expire("test", 10, function (err, result) {
       result.should.equal(0);
       r.end();
@@ -116,7 +116,7 @@ describe("expire", function () {
   });
 
   it("should return 1 when timeout set on existing key", function (done) {
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
     r.set("test", "test", function (err, result) {
       r.expire("test", 10, function (err, result) {
         result.should.equal(1);
@@ -128,7 +128,7 @@ describe("expire", function () {
   });
 
   it("should make key disappear after the set time", function (done) {
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
     r.set("test", "val", function (err, result) {
       r.expire("test", 1, function (err, result) {
         result.should.equal(1);
@@ -157,7 +157,7 @@ describe("ttl", function () {
     if (r) {
       r.end();
     }
-    r = redismock.createClient("", "", "");
+    r = redismock.createClient();
   });
   after(function () {
     clock.restore();

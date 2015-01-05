@@ -11,7 +11,7 @@ describe("get", function () {
 
   it("should return the value of an existing key", function (done) {
 
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
 
     r.set("foo", "bar", function (err, result) {
 
@@ -31,7 +31,7 @@ describe("get", function () {
 
   it("should return null for a non-existing key", function (done) {
 
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
 
 
     r.get("does-not-exist", function (err, result) {
@@ -59,7 +59,7 @@ describe("setex", function () {
 
   beforeEach(function () {
     // speed up tests with fake timers. See http://sinonjs.org/docs/#clock-api
-    r = redismock.createClient("", "", "");
+    r = redismock.createClient();
   });
   after(function () {
     clock.restore()
@@ -103,7 +103,7 @@ describe("mget", function () {
 
   it("should fetch multiple values across multiple keys", function (done) {
 
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
 
     r.set("multi1", "one", function (err, result) {
 
@@ -131,7 +131,7 @@ describe("incr", function () {
 
   it("should increment the number stored at key", function (done) {
 
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
 
     r.set("foo", "10", function (err, result) {
 
@@ -152,7 +152,7 @@ describe("incr", function () {
 
   it("should set 0 before performing if the key does not exist", function (done) {
 
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
 
     r.incr("bar", function (err, result) {
 
@@ -170,7 +170,7 @@ describe("incr", function () {
 
   it("should return error if the key holds the wrong kind of value.", function (done) {
 
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
 
     r.hset("foo", "bar", "baz", function (err, result) {
 
@@ -186,7 +186,7 @@ describe("incr", function () {
 
   it("should return error if the key contains a string that can not be represented as integer.", function (done) {
 
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
 
     r.set("baz", "qux", function (err, result) {
 
@@ -205,7 +205,7 @@ describe("setnx", function () {
 
     it("should set a key", function (done) {
 
-        var r = redismock.createClient("", "", "");
+        var r = redismock.createClient();
 
         r.setnx("foo", "10", function (err, result) {
             result.should.eql(1);
@@ -222,7 +222,7 @@ describe("setnx", function () {
 
     it("should not re-set a key", function (done) {
 
-        var r = redismock.createClient("", "", "");
+        var r = redismock.createClient();
 
         r.set("foo", "val", function (err, result) {
 

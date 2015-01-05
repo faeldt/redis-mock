@@ -20,7 +20,7 @@ describe("publish and subscribe", function () {
 
   it("should subscribe and unsubscribe to a channel", function (done) {
 
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
 
     should.exist(r.subscribe);
     should.exist(r.unsubscribe);
@@ -49,7 +49,7 @@ describe("publish and subscribe", function () {
     var channelName = "testchannel";
     var otherChannel = "otherchannel";
 
-    var r = redismock.createClient("", "", "");
+    var r = redismock.createClient();
     r.subscribe(channelName);
 
     try {
@@ -68,8 +68,8 @@ describe("publish and subscribe", function () {
     var channelName = "testchannel";
     var otherChannel = "otherchannel";
 
-    var r = redismock.createClient("", "", "");
-    var r2 = redismock.createClient("", "", "");
+    var r = redismock.createClient();
+    var r2 = redismock.createClient();
     r.subscribe(channelName);
 
     r.on('message', function (ch, msg) {
@@ -94,9 +94,9 @@ describe("publish and subscribe", function () {
     var channelName = "testchannel";
     var doneChannel = "donechannel";
 
-    var r = redismock.createClient("", "", "");
-    var r2 = redismock.createClient("", "", "");
-    var r3 = redismock.createClient("", "", "");
+    var r = redismock.createClient();
+    var r2 = redismock.createClient();
+    var r3 = redismock.createClient();
 
     r.subscribe(channelName);
     r2.subscribe(channelName);
