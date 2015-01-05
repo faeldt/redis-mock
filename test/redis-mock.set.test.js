@@ -27,9 +27,9 @@ describe('sadd', function () {
       result.should.eql(3);
 
       r.smembers('foo', function (err, result) {
-        result.should.include('bar');
-        result.should.include('baz');
-        result.should.include('qux');
+        result.should.containEql('bar');
+        result.should.containEql('baz');
+        result.should.containEql('qux');
         result.should.have.length(3);
 
         r.end();
@@ -47,8 +47,8 @@ describe('sadd', function () {
         result.should.eql(0);
 
         r.smembers('foo', function (err, result) {
-          result.should.include('bar');
-          result.should.include('baz');
+          result.should.containEql('bar');
+          result.should.containEql('baz');
           result.should.have.length(2);
 
           r.end();
@@ -76,8 +76,8 @@ describe('sadd', function () {
     var r = redismock.createClient('', '', '');
     r.sadd('foo', 'bar', 'baz');
     r.smembers('foo', function (err, result) {
-      result.should.include('bar');
-      result.should.include('baz');
+      result.should.containEql('bar');
+      result.should.containEql('baz');
       result.should.have.length(2);
 
       r.end();
@@ -97,9 +97,9 @@ describe('srem', function () {
         result.should.eql(1);
 
         r.smembers('foo', function (err, result) {
-          result.should.not.include('bar');
-          result.should.include('baz');
-          result.should.include('qux');
+          result.should.not.containEql('bar');
+          result.should.containEql('baz');
+          result.should.containEql('qux');
           result.should.have.length(2);
 
           r.end();
@@ -117,9 +117,9 @@ describe('srem', function () {
         result.should.eql(2);
 
         r.smembers('foo', function (err, result) {
-          result.should.not.include('bar');
-          result.should.not.include('baz');
-          result.should.include('qux');
+          result.should.not.containEql('bar');
+          result.should.not.containEql('baz');
+          result.should.containEql('qux');
           result.should.have.length(1);
 
           r.end();
@@ -178,8 +178,8 @@ describe('srem', function () {
     r.sadd('foo', 'bar', 'baz', function (err, result) {
       r.srem('foo', 'bar', 'baz');
       r.smembers('foo', function (err, result) {
-        result.should.not.include('bar');
-        result.should.not.include('baz');
+        result.should.not.containEql('bar');
+        result.should.not.containEql('baz');
         result.should.have.length(0);
 
         r.end();

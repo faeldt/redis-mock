@@ -9,7 +9,7 @@
     "url": "https://github.com/faeldt/redis-mock.git"
   },
   "devDependencies": {
-    "should": "*",
+    "should": "4.4.2",
     "mocha": "*",
     "redis": "*",
     "sinon": "~1.7.3"

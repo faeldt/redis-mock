@@ -242,9 +242,9 @@ describe("keys", function () {
   it("should return all existing keys if pattern equal - *", function (done) {
     r.keys('*', function (err, keys) {
       keys.should.have.length(3);
-      keys.should.include("hello");
-      keys.should.include("hallo");
-      keys.should.include("hxlo");
+      keys.should.containEql("hello");
+      keys.should.containEql("hallo");
+      keys.should.containEql("hxlo");
       done();
     });
   });
@@ -252,8 +252,8 @@ describe("keys", function () {
   it("should correct process pattern with '?'", function (done) {
     r.keys('h?llo', function (err, keys) {
       keys.should.have.length(2);
-      keys.should.include("hello");
-      keys.should.include("hallo");
+      keys.should.containEql("hello");
+      keys.should.containEql("hallo");
       done();
     });
   });
@@ -261,8 +261,8 @@ describe("keys", function () {
   it("should correct process pattern with character sets", function (done) {
     r.keys('h[ae]llo', function (err, keys) {
       keys.should.have.length(2);
-      keys.should.include("hello");
-      keys.should.include("hallo");
+      keys.should.containEql("hello");
+      keys.should.containEql("hallo");
       done();
     });
   });
@@ -270,9 +270,9 @@ describe("keys", function () {
   it("should correct process pattern with all special characters", function (done) {
     r.keys('?[aex]*o', function (err, keys) {
       keys.should.have.length(3);
-      keys.should.include("hello");
-      keys.should.include("hallo");
-      keys.should.include("hxlo");
+      keys.should.containEql("hello");
+      keys.should.containEql("hallo");
+      keys.should.containEql("hxlo");
       done();
     });
   });
