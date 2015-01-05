@@ -176,7 +176,7 @@ describe("incr", function () {
 
       r.incr("foo", function (err, result) {
 
-        err.message.should.eql("ERR Operation against a key holding the wrong kind of value");
+        err.message.should.eql("WRONGTYPE Operation against a key holding the wrong kind of value");
 
         r.end();
         done();

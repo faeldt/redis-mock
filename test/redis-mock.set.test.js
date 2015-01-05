@@ -64,7 +64,7 @@ describe('sadd', function () {
     r.hset('foo', 'bar', 'baz', function (err, result) {
 
       r.sadd('foo', 'bar', function (err, result) {
-        err.message.should.eql('ERR Operation against a key holding the wrong kind of value');
+        err.message.should.eql('WRONGTYPE Operation against a key holding the wrong kind of value');
 
         r.end();
         done();
@@ -165,7 +165,7 @@ describe('srem', function () {
     r.hset('foo', 'bar', 'baz', function (err, result) {
 
       r.srem('foo', 'bar', function (err, result) {
-        err.message.should.eql('ERR Operation against a key holding the wrong kind of value');
+        err.message.should.eql('WRONGTYPE Operation against a key holding the wrong kind of value');
 
         r.end();
         done();
@@ -220,7 +220,7 @@ describe('scard', function () {
     var r = redismock.createClient();
     r.hset('foo', 'bar', 'baz', function (err, result) {
       r.scard('foo', function (err, result) {
-        err.message.should.eql('ERR Operation against a key holding the wrong kind of value');
+        err.message.should.eql('WRONGTYPE Operation against a key holding the wrong kind of value');
         r.end();
         done();
       });

@@ -65,7 +65,7 @@ describe("basic hashing usage", function () {
 
         should.not.exist(result);
 
-        err.message.should.equal("ERR Operation against a key holding the wrong kind of value");
+        err.message.should.equal("WRONGTYPE Operation against a key holding the wrong kind of value");
 
         r.end();
 
