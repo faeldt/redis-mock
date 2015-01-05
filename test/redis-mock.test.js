@@ -85,6 +85,13 @@ describe("redis-mock", function () {
 
 describe("redis-error-mock", function () {
     it("should emit a connection error", function (done) {
+		
+		// Skip this when testing against actual Redis
+		if (process.env['VALID_TESTS']) {
+			done();
+			return;
+		}
+		
         var redis = new redismock.RedisErrorMock();
 
         var r = redis.createClient();
