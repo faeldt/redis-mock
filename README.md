@@ -28,12 +28,10 @@ var redis = require("redis-mock"),
 redis-mock is a WIP, why most commands are not yet available. Currently implemented are the following:
 
 ## General
-
 * createClient
 * end
 
 ## Events
-
 * ready
 * connect
 * end
@@ -62,6 +60,7 @@ redis-mock is a WIP, why most commands are not yet available. Currently implemen
 * mget
 * setex 
 * setnx
+* ping
 
 ## Hashing
 * hset
