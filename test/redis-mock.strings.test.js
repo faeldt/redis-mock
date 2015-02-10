@@ -6,6 +6,22 @@ if (process.env['VALID_TESTS']) {
   redismock = require('redis');
 }
 
+describe("ping", function () {
+  it("should return PONG", function (done) {
+
+    var r = redismock.createClient();
+
+    r.ping(function (err, result) {
+      result.should.equal("PONG");
+
+      r.end();
+
+      done();
+
+    });
+  });
+});
+
 describe("get", function () {
 
   it("should return the value of an existing key", function (done) {
@@ -23,9 +39,7 @@ describe("get", function () {
         done();
 
       });
-
     });
-
   });
 
   it("should return null for a non-existing key", function (done) {
@@ -42,10 +56,7 @@ describe("get", function () {
       done();
 
     });
-
-
   });
-
 });
 
 describe("setex", function () {
