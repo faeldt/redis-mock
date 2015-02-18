@@ -1,6 +1,6 @@
-var redismock = require("../")
-var should = require("should")
-var events = require("events")
+var redismock = require("../");
+var should = require("should");
+var events = require("events");
 
 if (process.env['VALID_TESTS']) {
   redismock = require('redis');
@@ -96,10 +96,11 @@ describe("set", function () {
         result.should.equal("OK");
 
         r.set("foo", "bar", "NX", "EX", 1, function (err, result) {
-            should.not.exist(err);
-            should.not.exist(result);
-          r.end();
-          done();
+            (err === null).should.be.true;
+            (result === null).should.be.true;
+
+            r.end();
+            done();
 
         });
     });
