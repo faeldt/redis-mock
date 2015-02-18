@@ -92,7 +92,7 @@ describe("set", function () {
 
     var r = redismock.createClient();
 
-    r.set("foo", "bar", 1, function (err, result) {
+    r.set("foo", "bar", function (err, result) {
         result.should.equal("OK");
 
         r.set("foo", "bar", "NX", "EX", 1, function (err, result) {
