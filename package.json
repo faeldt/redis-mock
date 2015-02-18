@@ -20,7 +20,10 @@
     "redis",
     "redis-mock",
     "mock-redis",
-    "redis test"
+    "redis test",
+    "redis mock",
+    "redis testing",
+    "redis fake"
   ],
   "contributors": [
     "lahabana (Charly Molter) <charly.molter@gmail.com>",

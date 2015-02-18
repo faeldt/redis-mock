@@ -22,6 +22,92 @@ describe("ping", function () {
   });
 });
 
+describe("set", function () {
+  it("should set a key", function (done) {
+
+    var r = redismock.createClient();
+
+    r.set("foo", "bar", function (err, result) {
+      result.should.equal("OK");
+
+          r.get("foo", function (err, result) {
+
+            result.should.equal("bar");
+
+            r.end();
+
+            done();
+
+          });
+    });
+  });
+
+  it("should set a key with ex", function (done) {
+
+    var r = redismock.createClient();
+
+    r.set("foo", "bar", "ex", 1, function (err, result) {
+      result.should.equal("OK");
+
+          r.get("foo", function (err, result) {
+
+            result.should.equal("bar");
+
+            setTimeout(function () {
+              r.exists("foo", function (err, result) {
+                result.should.equal(0);
+                r.end();
+                done();
+              });
+            }, 1100);
+
+          });
+    });
+  });
+
+  it("should set a key with EX and NX", function (done) {
+
+    var r = redismock.createClient();
+
+    r.set("foo", "bar", "NX", "EX", 1, function (err, result) {
+      result.should.equal("OK");
+
+          r.get("foo", function (err, result) {
+
+            result.should.equal("bar");
+
+            setTimeout(function () {
+              r.exists("foo", function (err, result) {
+                result.should.equal(0);
+                r.end();
+                done();
+              });
+            }, 1100);
+
+          });
+    });
+  });
+
+  it("should not set a key with EX and NX", function (done) {
+
+    var r = redismock.createClient();
+
+    r.set("foo", "bar", 1, function (err, result) {
+        result.should.equal("OK");
+
+        r.set("foo", "bar", "NX", "EX", 1, function (err, result) {
+            should.not.exist(err);
+            should.not.exist(result);
+          r.end();
+          done();
+
+        });
+    });
+  });
+
+});
+
+
 describe("get", function () {
 
   it("should return the value of an existing key", function (done) {
@@ -71,7 +157,7 @@ describe("setex", function () {
   it("should set a key", function (done) {
     var key = 'test_persist';
     r.setex(key, 1000, "val", function (err, result) {
-      result.should.be.ok;
+        result.should.equal("OK");
       r.get(key, function (err, result) {
         result.should.equal("val");
         r.end();
@@ -86,7 +172,7 @@ describe("setex", function () {
 
     function cb(err, result) {
       result.should.be.ok;
-      
+
       setTimeout(function () {
         r.exists(key, function (err, result) {
           result.should.equal(0);
