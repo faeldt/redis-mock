@@ -51,14 +51,14 @@ redis-mock is a WIP, why most commands are not yet available. Currently implemen
 * exists
 * expire
 * ttl
-* incr 
+* incr
 * incrbyfloat
 
 ## Strings
-* get 
+* get
 * set
 * mget
-* setex 
+* setex
 * setnx
 * ping
 
@@ -74,6 +74,7 @@ redis-mock is a WIP, why most commands are not yet available. Currently implemen
 * hmget
 * hkeys
 * hincrby
+* hincrbyfloat
 
 ## Lists
 * llen

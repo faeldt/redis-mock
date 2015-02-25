@@ -251,6 +251,57 @@ describe("hincrby", function () {
 
 });
 
+describe("hincrbyfloat", function () {
+
+  var testHash = "myHashToIncrFloat";
+  var testKey = "myKeyToIncrFloat";
+
+
+  it("should increment an attribute of the hash", function (done) {
+
+    var r = redismock.createClient();
+
+    r.hincrbyfloat(testHash, testKey, 2.591, function (err, result) {
+      result.should.equal("2.591");
+
+      r.hget(testHash, testKey, function (err, result) {
+        result.should.equal("2.591");
+      });
+
+      r.end();
+
+      done();
+    });
+
+  });
+
+  it("should double increment an attribute of the hash", function (done) {
+
+    var r = redismock.createClient();
+
+    r.hincrbyfloat(testHash, testKey, 2.591, function (err, result) {
+      result.should.equal("2.591");
+
+      r.hincrbyfloat(testHash, testKey, 2.591, function (err, result) {
+          result.should.equal("5.182");
+
+          r.hget(testHash, testKey, function (err, result) {
+              result.should.equal("5.182");
+
+              r.end();
+
+              done();
+          });
+        });
+    });
+
+  });
+
+
+});
+
+
+
 describe("hsetnx", function () {
 
   var testHash = "myHash";
