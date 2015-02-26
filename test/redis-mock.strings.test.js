@@ -327,6 +327,80 @@ describe("incr", function () {
   });
 });
 
+describe("incrby", function () {
+
+  it("should increment the number stored at key by 2", function (done) {
+
+    var r = redismock.createClient();
+
+    r.set("foo", "10", function (err, result) {
+
+      r.incrby("foo", 2, function (err, result) {
+
+        result.should.eql(12);
+
+        r.get("foo", function (err, result) {
+
+          result.should.eql("12");
+
+          r.end();
+          done();
+        });
+      });
+    });
+  });
+
+  it("should set 0 before performing if the key does not exist", function (done) {
+
+    var r = redismock.createClient();
+
+    r.incrby("bar", 5, function (err, result) {
+
+      result.should.eql(5);
+
+      r.get("bar", function (err, result) {
+
+        result.should.eql("5");
+
+        r.end();
+        done();
+      });
+    });
+  });
+
+  it("should return error if the key holds the wrong kind of value.", function (done) {
+
+    var r = redismock.createClient();
+
+    r.hset("foo", "bar", "baz", function (err, result) {
+
+      r.incrby("foo", 5, function (err, result) {
+
+        err.message.should.eql("WRONGTYPE Operation against a key holding the wrong kind of value");
+
+        r.end();
+        done();
+      });
+    });
+  });
+
+  it("should return error if the key contains a string that can not be represented as integer.", function (done) {
+
+    var r = redismock.createClient();
+
+    r.set("baz", "qux", function (err, result) {
+
+      r.incrby("baz", 5, function (err, result) {
+
+        err.message.should.equal("ERR value is not an integer or out of range");
+
+        r.end();
+        done();
+      });
+    });
+  });
+});
+
 describe("incrbyfloat", function () {
 
   it("should increment the number stored at key by a float value", function (done) {
