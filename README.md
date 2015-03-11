@@ -4,28 +4,34 @@ redis-mock
 [![Build Status](https://travis-ci.org/yeahoffline/redis-mock.svg?branch=master)](https://travis-ci.org/yeahoffline/redis-mock)
 
 
-The goal of the redis-mock project is to create a feature-complete mock of https://github.com/mranney/node_redis, so that it may be used interchangeably when writing unit tests for code that depends on Redis.
+The goal of the `redis-mock` project is to create a feature-complete mock of https://github.com/mranney/node_redis, so that it may be used interchangeably when writing unit tests for code that depends on `redis`.
 
 All operations are performed in-memory, why no Redis installation is required.
+100% redis compatible (see cross verification)
 
 # Installation
 
-~~~
-	npm install redis-mock --save-dev
-~~~
-
+````bash
+$ npm install redis-mock --save-dev
+````
 
 
 ## Usage
+
+### node.js/io.js
+
+The below code demonstrates a example of using the redis-mock client in node.js/io.js
+
 
 ```js
 var redis = require("redis-mock"),
     client = redis.createClient();
 ```
 
+
 # API
 
-redis-mock is a WIP, why most commands are not yet available. Currently implemented are the following:
+Currently implemented are the following redis commands:
 
 ## General
 * createClient
@@ -94,18 +100,28 @@ redis-mock is a WIP, why most commands are not yet available. Currently implemen
 * flushdb
 * flushall
 
-## Cross verification
+
+
+
+# Cross verification
 
 If you want to add new tests to the test base it is important that they work too on node_redis (we are creating a mock...).
 You can therefore run the tests using `redis` instead of `redis-mock`. To do so:
 
-```
-	make check-tests
-```
+````bash
+$ make check-tests
+````
 
 
-You will need to have a running instance of redis on you machine and our tests use `flushdb a lot so make sure you don't have anything important on it.
+You will need to have a running instance of `redis` on you machine and our tests use flushdb a lot so make sure you don't have anything important on it.
 
+
+# Roadmap
+redis-mock is work in progress, feel free to report an issue
+
+
+# Versions
+coming soon
 
 
 
