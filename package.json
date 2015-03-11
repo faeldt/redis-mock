@@ -27,7 +27,10 @@
     "redis-js",
     "redis js",
     "redisjs",
-    "redis standalone"
+    "redis standalone",
+    "redis inmemory",
+    "redis memory",
+    "in-memory"
   ],
   "contributors": [
     "lahabana (Charly Molter) <charly.molter@gmail.com>",
