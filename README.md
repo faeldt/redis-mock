@@ -33,11 +33,11 @@ var redis = require("redis-mock"),
 
 Currently implemented are the following redis commands:
 
-## General
+### General
 * createClient
 * end
 
-## Events
+### Events
 * ready
 * connect
 * end
@@ -46,12 +46,12 @@ Currently implemented are the following redis commands:
 * unsubscribe
 * message
 
-## Publish/subscribe
+### Publish/subscribe
 * publish
 * subscribe
 * unsubscribe
 
-## Keys
+### Keys
 * del
 * keys
 * exists
@@ -61,7 +61,7 @@ Currently implemented are the following redis commands:
 * incrby
 * incrbyfloat
 
-## Strings
+### Strings
 * get
 * set
 * mget
@@ -69,7 +69,7 @@ Currently implemented are the following redis commands:
 * setnx
 * ping
 
-## Hashing
+### Hashing
 * hset
 * hsetnx
 * hget
@@ -83,7 +83,7 @@ Currently implemented are the following redis commands:
 * hincrby
 * hincrbyfloat
 
-## Lists
+### Lists
 * llen
 * lpush
 * rpush
@@ -96,7 +96,7 @@ Currently implemented are the following redis commands:
 * lindex
 * lset
 
-## Server
+### Server
 * flushdb
 * flushall
 
@@ -121,7 +121,7 @@ redis-mock is work in progress, feel free to report an issue
 
 
 # Versions
-coming soon
+0.4.7 update devDependencies (should, mocha)
 
 
 

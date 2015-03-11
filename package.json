@@ -1,6 +1,6 @@
 {
   "name": "redis-mock",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "description": "Redis client mock object for unit testing",
   "author": "Kristian Faeldt <kristian.faeldt@gmail.com>",
   "main": "./lib/redis-mock",
@@ -9,8 +9,8 @@
     "url": "https://github.com/yeahoffline/redis-mock"
   },
   "devDependencies": {
-    "should": "4.3.x",
-    "mocha": "2.0.x",
+    "should": "5.1.0",
+    "mocha": "2.2.1",
     "redis": "0.12.1"
   },
   "scripts": {
@@ -23,7 +23,11 @@
     "redis test",
     "redis mock",
     "redis testing",
-    "redis fake"
+    "redis fake",
+    "redis-js",
+    "redis js",
+    "redisjs",
+    "redis standalone"
   ],
   "contributors": [
     "lahabana (Charly Molter) <charly.molter@gmail.com>",
