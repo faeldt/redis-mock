@@ -242,3 +242,43 @@ describe("setnx", function () {
 
     });
 });
+
+describe("append", function() {
+
+   it("should append two values after set", function(done) {
+
+      var r = redismock.createClient();
+
+      r.set("foo", "bar1", function(err, result) {
+
+        r.append("foo", "bar2", function(err, result) {
+
+            r.get("foo", function(err, result) {
+
+              result.should.equal("bar1bar2")
+              r.end();
+              done();
+            });
+        });
+      });
+   });
+
+   it("should append two values after append command", function(done) {
+
+      var r = redismock.createClient();
+
+      r.append("foo", "bar1", function(err, result) {
+
+        r.append("foo", "bar2", function(err, result) {
+
+            r.get("foo", function(err, result) {
+
+              result.should.equal("bar1bar2")
+              r.end();
+              done();
+            });
+        });
+      });
+   });
+});
+
