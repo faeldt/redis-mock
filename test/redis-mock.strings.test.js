@@ -42,24 +42,6 @@ describe("set", function () {
     });
   });
 
-  it("should toString() values", function (done) {
-
-    var r = redismock.createClient();
-
-    r.set("foo", {probably_not:'desired'}, function (err, result) {
-      result.should.equal("OK");
-
-      r.get("foo", function (err, result) {
-
-        result.should.equal("[object Object]");
-
-        r.end();
-        done();
-
-      });
-    });
-  });
-
   it("should set a key with ex", function (done) {
 
     var r = redismock.createClient();

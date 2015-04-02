@@ -27,7 +27,7 @@ describe("createString", function () {
 
     item.type.should.equal("string");
     item.expires.should.equal(-1);
-    item.value.should.equal("[object Object]");
+    item.value.should.equal(JSON.stringify(elt));
   });
 
   it('should return a string when passed an array', function () {
@@ -36,7 +36,7 @@ describe("createString", function () {
 
     item.type.should.equal("string");
     item.expires.should.equal(-1);
-    item.value.should.equal("a,false,b");
+    item.value.should.equal(JSON.stringify(elt));
   });
 
   it('should return a string when passed a boolean', function () {
