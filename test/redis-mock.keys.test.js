@@ -143,6 +143,29 @@ describe("expire", function () {
       });
     });
   });
+
+  it("accepts timeouts exceeding 2**31 msec", function (done) {
+    var r = redismock.createClient();
+    r.set("test_exceeds", "val", function (err, result) {
+      r.expire("test_exceeds", 86400*31 /* one month */, function (err, result) {
+        result.should.equal(1);
+        setTimeout(function () {
+          r.exists("test_exceeds", function (err, result) {
+            result.should.equal(1);
+            setTimeout(function () {
+              r.exists("test_exceeds", function (err, result) {
+                result.should.equal(0);
+                r.end();
+                done();
+              });
+            }, 2147483647);
+            clock.tick(2147483647);
+          });
+        }, 1000);
+        clock.tick(1000);
+      });
+    });
+  });
 });
 
 describe("ttl", function () {
