@@ -31,6 +31,15 @@ describe("redis-mock", function () {
 
   });
 
+  it("should call a callback when selecting a database", function (done) {
+    var r = redismock.createClient();
+
+    r.select(0, function(error) {
+      should.not.exist(error);
+      done();
+    });
+  });
+
   it("should emit ready and connected when creating client", function (done) {
 
     var r = redismock.createClient();
@@ -85,13 +94,13 @@ describe("redis-mock", function () {
 
 describe("redis-error-mock", function () {
     it("should emit a connection error", function (done) {
-		
+
 		// Skip this when testing against actual Redis
 		if (process.env['VALID_TESTS']) {
 			done();
 			return;
 		}
-		
+
         var redis = new redismock.RedisErrorMock();
 
         var r = redis.createClient();
