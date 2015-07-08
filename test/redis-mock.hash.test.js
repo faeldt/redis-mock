@@ -355,6 +355,18 @@ describe("multiple get/set", function () {
     });
   });
 
+  it("should be able to set values with no callback", function (done) {
+    var r = redismock.createClient();
+    var d = {mKey1: mValue1};
+
+    r.hmset('myKey', {mKey1: mValue1});
+    r.hgetall('myKey', function (err, result) {
+      should(result).have.property(mKey1, mValue1);
+      done();
+    });
+
+  });
+
   it("should be able to set multiple keys as an object", function (done) {
 
 
