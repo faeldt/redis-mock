@@ -355,7 +355,7 @@ describe("multiple get/set", function () {
     });
   });
 
-  it("should be able to set values with no callback", function (done) {
+  it("should be able to set multiple keys with no callback", function (done) {
     var r = redismock.createClient();
     var d = {mKey1: mValue1};
 
