@@ -228,3 +228,51 @@ describe('scard', function () {
   });
 
 });
+
+describe('sismember', function () {
+
+  it('should return 1 if the value exists in the set', function (done) {
+    var r = redismock.createClient();
+    r.sadd('foo', 'bar', function (err, result) {
+      r.sismember('foo', 'bar', function (err, result) {
+        result.should.eql(1);
+        r.end();
+        done();
+      });
+    });
+  });
+
+  it('should return 0 if the value does not exist in the set', function (done) {
+    var r = redismock.createClient();
+    r.sadd('foo', 'bar', function (err, result) {
+      r.sismember('foo', 'boo', function (err, result) {
+        result.should.eql(0);
+        r.end();
+        done();
+      });
+    });
+  });
+
+  it('should return 0 if key does not exist', function (done) {
+    var r = redismock.createClient();
+    r.sadd('foo', 'bar', 'baz', function (err, result) {
+      r.sismember('qux', 'bar', function (err, result) {
+        result.should.eql(0);
+        r.end();
+        done();
+      });
+    });
+  });
+
+  it('should return error when the value stored at the key is not a set', function (done) {
+    var r = redismock.createClient();
+    r.hset('foo', 'bar', 'baz', function (err, result) {
+      r.sismember('foo', 'bar', function (err, result) {
+        err.message.should.eql('WRONGTYPE Operation against a key holding the wrong kind of value');
+        r.end();
+        done();
+      });
+    });
+  });
+
+});
