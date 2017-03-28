@@ -5,7 +5,7 @@ var sinon = require('./timer-helper')
 
 if (process.env['VALID_TESTS']) {
   redismock = require('redis');
-  
+
 }
 
 describe("basic pushing/poping list", function () {
@@ -120,6 +120,34 @@ describe("llen", function () {
     r.lpush.apply(r, [testKey].concat(testValues, cb));
   });
 
+});
+
+describe("lrange", function () {
+  var testKey = "myKey123";
+  it("should return empty list", function (done) {
+    var r = redismock.createClient();
+    r.lrange(testKey, 0, 1, function (err, result) {
+      result.length.should.equal(0);
+      r.end();
+      done();
+    });
+  });
+
+  it("should return single value", function (done) {
+    var r = redismock.createClient();
+    r.rpush(testKey, 'foo', function (err, result) {
+      r.rpush(testKey, 'bar', function (err, result) {
+        // lrange is right inclusive
+        r.lrange(testKey, 0, 1, function (err, result) {
+          result.length.should.equal(2);
+          result[0].should.equal('foo');
+          result[1].should.equal('bar');
+          r.end();
+          done();
+        });
+      });
+    });
+  });
 });
 
 describe("lindex", function () {
