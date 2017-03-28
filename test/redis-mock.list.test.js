@@ -178,6 +178,27 @@ describe("lrange", function () {
   });
 });
 
+describe("ltrim", function () {
+  var values = ['a', 'b', 'c', 'd'];
+  var testKey = 'foo';
+  it("should trim list", function (done) {
+    var r = redismock.createClient();
+    r.rpush(testKey, values, function (err, result) {
+      r.ltrim(testKey, 0, 1, function (err, result) {
+        result.should.equal('OK');
+        r.lrange(testKey, 0, 1, function (err, result) {
+          result.length.should.equal(2);
+          result[0].should.equal('a');
+          result[1].should.equal('b');
+          r.end();
+          done();
+        });
+      });
+    });
+  });
+});
+
+
 describe("lindex", function () {
   var testKey = "myKey4";
   var testKey2 = "myKey5";
