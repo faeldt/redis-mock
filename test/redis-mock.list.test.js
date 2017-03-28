@@ -196,6 +196,22 @@ describe("ltrim", function () {
       });
     });
   });
+
+  it("should trim list with negative start/end", function (done) {
+    var r = redismock.createClient();
+    r.rpush(testKey, values, function (err, result) {
+      r.ltrim(testKey, -2, -1, function (err, result) {
+        result.should.equal('OK');
+        r.lrange(testKey, 0, 1, function (err, result) {
+          result.length.should.equal(2);
+          result[0].should.equal('c');
+          result[1].should.equal('d');
+          r.end();
+          done();
+        });
+      });
+    });
+  });
 });
 
 
