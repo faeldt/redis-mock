@@ -146,12 +146,27 @@ describe("lrange", function () {
     });
   });
 
-  it("should return single value", function (done) {
+  it("should return multiple values", function (done) {
     var r = redismock.createClient();
     r.rpush(testKey, 'foo', function (err, result) {
       r.rpush(testKey, 'bar', function (err, result) {
         // lrange is right inclusive
         r.lrange(testKey, 0, 1, function (err, result) {
+          result.length.should.equal(2);
+          result[0].should.equal('foo');
+          result[1].should.equal('bar');
+          r.end();
+          done();
+        });
+      });
+    });
+  });
+
+  it("should return full list with negative indexes", function (done) {
+    var r = redismock.createClient();
+    r.rpush(testKey, 'foo', function (err, result) {
+      r.rpush(testKey, 'bar', function (err, result) {
+        r.lrange(testKey, 0, -1, function (err, result) {
           result.length.should.equal(2);
           result[0].should.equal('foo');
           result[1].should.equal('bar');
