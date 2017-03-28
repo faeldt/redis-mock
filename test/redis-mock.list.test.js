@@ -5,7 +5,7 @@ var sinon = require('./timer-helper')
 
 if (process.env['VALID_TESTS']) {
   redismock = require('redis');
-  
+
 }
 
 describe("basic pushing/poping list", function () {
@@ -121,6 +121,99 @@ describe("llen", function () {
   });
 
 });
+
+describe("lrange", function () {
+  var testKey = "myKey123";
+  it("should return empty list", function (done) {
+    var r = redismock.createClient();
+    r.lrange(testKey, 0, 1, function (err, result) {
+      result.length.should.equal(0);
+      r.end();
+      done();
+    });
+  });
+
+  it("should return error for wrong operation", function (done) {
+    var r = redismock.createClient();
+
+    r.set(testKey, 'foo', function (err, result) {
+      r.lrange(testKey, 0, 1, function (err, result) {
+        should.not.exist(result);
+        should.exist(err);
+        r.end();
+        done();
+      });
+    });
+  });
+
+  it("should return multiple values", function (done) {
+    var r = redismock.createClient();
+    r.rpush(testKey, 'foo', function (err, result) {
+      r.rpush(testKey, 'bar', function (err, result) {
+        // lrange is right inclusive
+        r.lrange(testKey, 0, 1, function (err, result) {
+          result.length.should.equal(2);
+          result[0].should.equal('foo');
+          result[1].should.equal('bar');
+          r.end();
+          done();
+        });
+      });
+    });
+  });
+
+  it("should return full list with negative indexes", function (done) {
+    var r = redismock.createClient();
+    r.rpush(testKey, 'foo', function (err, result) {
+      r.rpush(testKey, 'bar', function (err, result) {
+        r.lrange(testKey, 0, -1, function (err, result) {
+          result.length.should.equal(2);
+          result[0].should.equal('foo');
+          result[1].should.equal('bar');
+          r.end();
+          done();
+        });
+      });
+    });
+  });
+});
+
+describe("ltrim", function () {
+  var values = ['a', 'b', 'c', 'd'];
+  var testKey = 'foo';
+  it("should trim list", function (done) {
+    var r = redismock.createClient();
+    r.rpush(testKey, values, function (err, result) {
+      r.ltrim(testKey, 0, 1, function (err, result) {
+        result.should.equal('OK');
+        r.lrange(testKey, 0, 1, function (err, result) {
+          result.length.should.equal(2);
+          result[0].should.equal('a');
+          result[1].should.equal('b');
+          r.end();
+          done();
+        });
+      });
+    });
+  });
+
+  it("should trim list with negative start/end", function (done) {
+    var r = redismock.createClient();
+    r.rpush(testKey, values, function (err, result) {
+      r.ltrim(testKey, -2, -1, function (err, result) {
+        result.should.equal('OK');
+        r.lrange(testKey, 0, 1, function (err, result) {
+          result.length.should.equal(2);
+          result[0].should.equal('c');
+          result[1].should.equal('d');
+          r.end();
+          done();
+        });
+      });
+    });
+  });
+});
+
 
 describe("lindex", function () {
   var testKey = "myKey4";
