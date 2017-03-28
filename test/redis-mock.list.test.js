@@ -133,6 +133,19 @@ describe("lrange", function () {
     });
   });
 
+  it("should return error for wrong operation", function (done) {
+    var r = redismock.createClient();
+
+    r.set(testKey, 'foo', function (err, result) {
+      r.lrange(testKey, 0, 1, function (err, result) {
+        should.not.exist(result);
+        should.exist(err);
+        r.end();
+        done();
+      });
+    });
+  });
+
   it("should return single value", function (done) {
     var r = redismock.createClient();
     r.rpush(testKey, 'foo', function (err, result) {
