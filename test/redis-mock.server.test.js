@@ -45,6 +45,7 @@ describe("scan", function () {
         should(result instanceof Array).be.exactly(true);
         should(result.length).be.exactly(2);
         should(isNaN(result[0])).be.exactly(false);
+        should(result[0]).be.exactly(0);
         should(result[1] instanceof Array).be.exactly(true);
         should(result[1].length).be.exactly(1);
 
